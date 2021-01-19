@@ -4,5 +4,5 @@ export const Bar: React.FC<{ height: number }> = (props) => {
     height: `${height}%`,
   }
 
-  return <div className="bg-red-600 w-4" style={barStylings}></div>
+  return <div className="bar bg-red-600 w-1" style={barStylings}></div>
 }
