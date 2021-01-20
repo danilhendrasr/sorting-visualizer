@@ -27,8 +27,6 @@ const _selectionSort = (bars: number[]): void => {
   for (let i = 0; i < animationSequence.length; i++) {
     const [firstBarIdx, secondBarIdx] = animationSequence[i]
 
-    if (firstBarIdx === secondBarIdx) continue
-
     const firstBar = barsEl[firstBarIdx]
     const secondBar = barsEl[secondBarIdx]
 
@@ -59,6 +57,21 @@ const _selectionSort = (bars: number[]): void => {
 
       firstBarStyle.height = `${arrayStates[i][firstBarIdx]}%`
       secondBarStyle.height = `${arrayStates[i][secondBarIdx]}%`
+
+      let lastIteration = i === animationSequence.length - 1
+      if (lastIteration) {
+        setTimeout(() => {
+          firstBar.classList.remove("bg-black")
+          firstBar.classList.add("bg-red-600")
+
+          for (let s = 0; s < barsEl.length; s++) {
+            setTimeout(() => {
+              barsEl[s].classList.remove("bg-red-600")
+              barsEl[s].classList.add("bg-black")
+            }, s * 10)
+          }
+        }, 50)
+      }
     }, i * 50)
   }
 }
