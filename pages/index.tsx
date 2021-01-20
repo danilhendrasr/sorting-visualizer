@@ -3,7 +3,7 @@ import { selectionSort } from "../algorithms/selectionSort"
 import { Bar } from "../components/Bar"
 import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
-import { generateNewBars } from "../utils/index"
+import { generateNewBarHeights } from "../utils/index"
 
 /**
  * Tailwind class of the active bar
@@ -173,7 +173,7 @@ const Home: React.FC = () => {
   ))
 
   useEffect(() => {
-    const newBarHeights = generateNewBars(150)
+    const newBarHeights = generateNewBarHeights(150)
     setBarHeights(newBarHeights)
   }, [])
 
