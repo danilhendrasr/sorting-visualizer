@@ -9,58 +9,34 @@ import { Grid } from "@geist-ui/react"
 /**
  * Tailwind class of the active bar
  */
-const ACTIVE_BAR_CLASS = "bg-black"
+const ACTIVE_BAR_COLOR = "#111"
 
 /**
  * Tailwind class of the default bar
  */
-const INACTIVE_BAR_CLASS = "bg-red-600"
+const INACTIVE_BAR_COLOR = "#ff1a1a"
 
 /**
  * Sorting speed in miliseconds
  */
 const SORTING_SPEED = 50
 
-interface changeElementClassParam {
-  add?: string
-  remove?: string
-}
-
 /**
- * Change an element's classList, can be adding or removing item from classList depending on the
- * 2nd param's properties
- * @param element A bar DOM element which will be modified
- * @param operations An object containing 2 optional property, add and remove. The presence
- * of one or both of it will determine what kind of operation will be done to the classList
+ * Change element backgroundColor to a given value
+ * @param element The DOM element
+ * @param toColor The value in which the background color will be changed to
  */
-const changeElementClass = (
-  element: Element,
-  operations: changeElementClassParam
-): void => {
-  let isAdd = operations.add
-  let isRemove = operations.remove
-  let isRemoveAndAdd = isRemove && isAdd
-
-  if (isRemoveAndAdd) {
-    element.classList.remove(operations.remove)
-    element.classList.add(operations.add)
-  } else if (isAdd) {
-    element.classList.add(operations.add)
-  } else if (isRemove) {
-    element.classList.remove(operations.remove)
-  }
+const changeBarColor = (element: HTMLElement, toColor: string): void => {
+  element.style.backgroundColor = toColor
 }
 
 /**
  * Revert each bar in the given collection bars from active bar to default bar
  * @param bars HTMLCollection of bar elements
  */
-const revertBarsColor = (bars: Element[]): void => {
+const revertBarsColor = (bars: HTMLElement[]): void => {
   for (const bar of bars) {
-    changeElementClass(bar, {
-      add: INACTIVE_BAR_CLASS,
-      remove: ACTIVE_BAR_CLASS,
-    })
+    changeBarColor(bar, INACTIVE_BAR_COLOR)
   }
 }
 
@@ -71,7 +47,7 @@ const revertBarsColor = (bars: Element[]): void => {
  */
 const revertPreviousBarsColors = (
   prevBarsIndexes: [number, number],
-  bars: HTMLCollectionOf<Element>
+  bars: HTMLCollectionOf<HTMLElement>
 ): void => {
   let [prevBar1Idx, prevBar2Idx] = prevBarsIndexes
 
@@ -83,7 +59,7 @@ const revertPreviousBarsColors = (
   revertBarsColor(previousActiveBars)
 }
 
-type BarToActiveBar = { element: Element; newHeight: number }
+type BarToActiveBar = { element: HTMLElement; newHeight: number }
 
 /**
  * Turn each bar in the given array into an active bar, then set the height of it
@@ -93,12 +69,7 @@ type BarToActiveBar = { element: Element; newHeight: number }
  */
 const makeBarsActive = (bars: BarToActiveBar[]): void => {
   for (const bar of bars) {
-    changeElementClass(bar.element, {
-      add: ACTIVE_BAR_CLASS,
-      remove: INACTIVE_BAR_CLASS,
-    })
-
-    // @ts-ignore
+    changeBarColor(bar.element, ACTIVE_BAR_COLOR)
     bar.element.style.height = `${bar.newHeight}%`
   }
 }
@@ -107,22 +78,19 @@ const makeBarsActive = (bars: BarToActiveBar[]): void => {
  * Turn every bar in the given array into an active bar one by one, from first bar to last bar
  * @param bars Array/HTML Collection of the bar's DOM elements
  */
-const postSortAnimation = (bars: HTMLCollectionOf<Element>): void => {
+const postSortAnimation = (bars: HTMLCollectionOf<HTMLElement>): void => {
   for (let n = 0; n < bars.length; n++) {
     setTimeout(() => {
       let nThBar = bars[n]
 
-      changeElementClass(nThBar, {
-        remove: INACTIVE_BAR_CLASS,
-        add: ACTIVE_BAR_CLASS,
-      })
+      changeBarColor(nThBar, ACTIVE_BAR_COLOR)
     }, n * 10)
   }
 }
 
 const animateSelectionSort = (barHeights: number[], postSortFunc?: () => void): void => {
   const [arrayStates, animationSequence] = selectionSort(barHeights)
-  const bars = document.getElementsByClassName("bar")
+  const bars = document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
 
   for (let i = 0; i < animationSequence.length; i++) {
     let firstIteration = i === 0
