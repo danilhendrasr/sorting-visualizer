@@ -28,8 +28,7 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
   return (
     <Button
       loading={isSorting}
-      shadow
-      type={isSorted ? "success" : "secondary"}
+      type={"secondary"}
       onClick={onClick}
       style={{ display: "block", margin: "0 auto" }}>
       {isSorted && (
