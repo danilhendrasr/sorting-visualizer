@@ -4,123 +4,93 @@ import { Bar } from "../components/Bar"
 import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
 import { generateNewBarHeights } from "../utils/index"
+import { Grid } from "@geist-ui/react"
 
 /**
  * Tailwind class of the active bar
  */
-const ACTIVE_BAR_CLASS = "bg-black"
+const ACTIVE_BAR_COLOR = "#111"
 
 /**
  * Tailwind class of the default bar
  */
-const DEFAULT_BAR_CLASS = "bg-red-600"
+const INACTIVE_BAR_COLOR = "#ff1a1a"
 
 /**
  * Sorting speed in miliseconds
  */
 const SORTING_SPEED = 50
 
-interface changeElementClassParam {
-  add?: string
-  remove?: string
-}
-
 /**
- * Change an element's classList, can be adding or removing item from classList depending on the
- * 2nd param's properties
- * @param element A bar DOM element which will be modified
- * @param operations An object containing 2 optional property, add and remove. The presence
- * of one or both of it will determine what kind of operation will be done to the classList
+ * Change element backgroundColor to a given value
+ * @param element The DOM element
+ * @param toColor The value in which the background color will be changed to
  */
-const changeElementClass = (
-  element: Element,
-  operations: changeElementClassParam
-): void => {
-  let isAdd = operations.add
-  let isRemove = operations.remove
-  let isRemoveAndAdd = isRemove && isAdd
-
-  if (isRemoveAndAdd) {
-    element.classList.remove(operations.remove)
-    element.classList.add(operations.add)
-  } else if (isAdd) {
-    element.classList.add(operations.add)
-  } else if (isRemove) {
-    element.classList.remove(operations.remove)
-  }
+const changeBarColor = (element: HTMLElement, toColor: string): void => {
+  element.style.backgroundColor = toColor
 }
 
 /**
  * Revert each bar in the given collection bars from active bar to default bar
  * @param bars HTMLCollection of bar elements
  */
-const revertBarsColor = (bars: Element[]): void => {
+const revertBarsColor = (bars: HTMLElement[]): void => {
   for (const bar of bars) {
-    changeElementClass(bar, {
-      add: DEFAULT_BAR_CLASS,
-      remove: ACTIVE_BAR_CLASS,
-    })
+    changeBarColor(bar, INACTIVE_BAR_COLOR)
   }
 }
 
 /**
- * Turn 2 previously active bars back into default bars
+ * Turn 2 previously active bars back into inactive bars
  * @param prevBarsIndexes Previous bars' indexes in the current DOM
- * @param barDomElements Array/HTMLCollection of the bar's DOM elemnt
+ * @param bars Array/HTMLCollection of the bar's DOM elemnt
  */
 const revertPreviousBarsColors = (
   prevBarsIndexes: [number, number],
-  barDomElements: HTMLCollectionOf<Element>
+  bars: HTMLCollectionOf<HTMLElement>
 ): void => {
   let [prevBar1Idx, prevBar2Idx] = prevBarsIndexes
 
-  let prevActiveBar1 = barDomElements[prevBar1Idx]
-  let prevActiveBar2 = barDomElements[prevBar2Idx]
+  let prevActiveBar1 = bars[prevBar1Idx]
+  let prevActiveBar2 = bars[prevBar2Idx]
 
   let previousActiveBars = [prevActiveBar1, prevActiveBar2]
 
   revertBarsColor(previousActiveBars)
 }
 
-type BarToActiveBar = { element: Element; newHeight: number }
+type BarToActiveBar = { element: HTMLElement; newHeight: number }
 
 /**
- * Turn each bar element in the bars param into an active bar
+ * Turn each bar in the given array into an active bar, then set the height of it
+ * to the given newHeight property
  * @param bars Array of object, each item is an object containing the element which
  * will be changed and the new height for that element
  */
 const makeBarsActive = (bars: BarToActiveBar[]): void => {
   for (const bar of bars) {
-    changeElementClass(bar.element, {
-      add: ACTIVE_BAR_CLASS,
-      remove: DEFAULT_BAR_CLASS,
-    })
-
-    // @ts-ignore
+    changeBarColor(bar.element, ACTIVE_BAR_COLOR)
     bar.element.style.height = `${bar.newHeight}%`
   }
 }
 
 /**
- * Turn every bar in the DOM into an active bar (black bar) one by one, from first bar to last bar
- * @param barsEl Array/HTML Collection of the bar's DOM elements
+ * Turn every bar in the given array into an active bar one by one, from first bar to last bar
+ * @param bars Array/HTML Collection of the bar's DOM elements
  */
-const postSortAnimation = (barsEl: HTMLCollectionOf<Element>): void => {
-  for (let s = 0; s < barsEl.length; s++) {
+const postSortAnimation = (bars: HTMLCollectionOf<HTMLElement>): void => {
+  for (let n = 0; n < bars.length; n++) {
     setTimeout(() => {
-      let sThBar = barsEl[s]
+      let nThBar = bars[n]
 
-      changeElementClass(sThBar, {
-        remove: DEFAULT_BAR_CLASS,
-        add: ACTIVE_BAR_CLASS,
-      })
-    }, s * 10)
+      changeBarColor(nThBar, ACTIVE_BAR_COLOR)
+    }, n * 10)
   }
 }
 
-const animateSelectionSort = (bars: number[]): void => {
-  const [arrayStates, animationSequence] = selectionSort(bars)
-  const barDomElements = document.getElementsByClassName("bar")
+const animateSelectionSort = (barHeights: number[], postSortFunc?: () => void): void => {
+  const [arrayStates, animationSequence] = selectionSort(barHeights)
+  const bars = document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
 
   for (let i = 0; i < animationSequence.length; i++) {
     let firstIteration = i === 0
@@ -128,8 +98,8 @@ const animateSelectionSort = (bars: number[]): void => {
 
     const [bar1Idx, bar2Idx] = animationSequence[i]
 
-    const activeBar1 = barDomElements[bar1Idx]
-    const activeBar2 = barDomElements[bar2Idx]
+    const activeBar1 = bars[bar1Idx]
+    const activeBar2 = bars[bar2Idx]
 
     const activeBar1Height = arrayStates[i][bar2Idx]
     const activeBar2Height = arrayStates[i][bar1Idx]
@@ -137,7 +107,7 @@ const animateSelectionSort = (bars: number[]): void => {
     setTimeout(() => {
       if (!firstIteration) {
         let prevAnimationSequence = animationSequence[i - 1]
-        revertPreviousBarsColors(prevAnimationSequence, barDomElements)
+        revertPreviousBarsColors(prevAnimationSequence, bars)
       }
 
       let barsToActiveBars: BarToActiveBar[] = [
@@ -154,11 +124,18 @@ const animateSelectionSort = (bars: number[]): void => {
       makeBarsActive(barsToActiveBars)
 
       if (lastIteration) {
+        // Revert the last bar to an inactive bar
         setTimeout(() => {
           let lastBar = activeBar1
           revertBarsColor([lastBar])
 
-          postSortAnimation(barDomElements)
+          // Because this animate function executes asynchronous function (setTimeout)
+          // if we wanted to do something right after this function is done running,
+          // we have to put the code inside the setTimeout and set it to run at the last iteration.
+          // Otherwise, the code will be executed before the setTimeouts get
+          // executed (because it is asynchronous).
+          postSortAnimation(bars)
+          if (postSortFunc) postSortFunc()
         }, SORTING_SPEED)
       }
     }, i * SORTING_SPEED)
@@ -167,21 +144,32 @@ const animateSelectionSort = (bars: number[]): void => {
 
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState([])
+  const [sortState, setSortState] = useState<"Sort" | "Sorting" | "Sorted">("Sort")
 
   const bars = barHeights.map((heightValue, idx) => (
     <Bar key={idx} height={heightValue} />
   ))
 
   useEffect(() => {
-    const newBarHeights = generateNewBarHeights(150)
+    const newBarHeights = generateNewBarHeights(100)
     setBarHeights(newBarHeights)
   }, [])
 
   return (
-    <div className="h-screen mt-8 mx-auto">
-      <ChartWrapper bars={bars} />
-      <SortButton clickAction={() => animateSelectionSort(barHeights)} />
-    </div>
+    <Grid.Container justify="center" style={{ height: "100vh" }}>
+      <Grid xs={24} style={{ paddingTop: "40px" }}>
+        <ChartWrapper bars={bars} />
+      </Grid>
+      <Grid xs={24}>
+        <SortButton
+          sortState={sortState}
+          clickAction={() => {
+            setSortState("Sorting")
+            animateSelectionSort(barHeights, () => setSortState("Sorted"))
+          }}
+        />
+      </Grid>
+    </Grid.Container>
   )
 }
 
