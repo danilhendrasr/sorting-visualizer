@@ -5,6 +5,7 @@ import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
 import { generateNewBarHeights } from "../utils/index"
 import { Grid } from "@geist-ui/react"
+import { AlgorithmSelector } from "../components/AlgorithmSelector"
 
 /**
  * Tailwind class of the active bar
@@ -71,6 +72,14 @@ const makeBarsActive = (bars: BarToActiveBar[]): void => {
   for (const bar of bars) {
     changeBarColor(bar.element, ACTIVE_BAR_COLOR)
     bar.element.style.height = `${bar.newHeight}%`
+  }
+}
+
+const makeAllBarsInactive = (): void => {
+  const bars = document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
+
+  for (let i = 0; i < bars.length; i++) {
+    changeBarColor(bars[i], INACTIVE_BAR_COLOR)
   }
 }
 
@@ -145,6 +154,9 @@ const animateSelectionSort = (barHeights: number[], postSortFunc?: () => void): 
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState([])
   const [sortState, setSortState] = useState<"Sort" | "Sorting" | "Sorted">("Sort")
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string | string[]>(
+    "Selection"
+  )
 
   const bars = barHeights.map((heightValue, idx) => (
     <Bar key={idx} height={heightValue} />
@@ -153,7 +165,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     const newBarHeights = generateNewBarHeights(100)
     setBarHeights(newBarHeights)
-  }, [])
+    setSortState("Sort")
+    makeAllBarsInactive()
+  }, [selectedAlgorithm])
 
   return (
     <Grid.Container justify="center" style={{ height: "100vh" }}>
@@ -161,13 +175,19 @@ const Home: React.FC = () => {
         <ChartWrapper bars={bars} />
       </Grid>
       <Grid xs={24}>
-        <SortButton
-          sortState={sortState}
-          clickAction={() => {
-            setSortState("Sorting")
-            animateSelectionSort(barHeights, () => setSortState("Sorted"))
-          }}
-        />
+        <div>
+          <SortButton
+            sortState={sortState}
+            clickAction={() => {
+              setSortState("Sorting")
+              animateSelectionSort(barHeights, () => setSortState("Sorted"))
+            }}
+          />
+          <AlgorithmSelector
+            selectedAlgorithm={selectedAlgorithm}
+            onChangeHandler={setSelectedAlgorithm}
+          />
+        </div>
       </Grid>
     </Grid.Container>
   )
