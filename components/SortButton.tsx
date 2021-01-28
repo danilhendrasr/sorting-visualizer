@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import { Button, Spacer } from "@geist-ui/react"
 import { Check } from "@geist-ui/react-icons"
-
-type SortingState = "Sort" | "Sorting" | "Sorted"
+import { SortingState } from "../types"
 
 interface SortButtonProps {
   clickAction: () => void
