@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { selectionSort } from "../algorithms/selectionSort"
 import { Bar } from "../components/Bar"
 import { ChartWrapper } from "../components/ChartWrapper"
@@ -14,6 +14,7 @@ import { Grid } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
 import { ActiveBar, SortingState } from "../types"
+import { insertionSort } from "../algorithms/insertionSort"
 
 /**
  * Sorting speed in miliseconds
@@ -22,7 +23,7 @@ const SORTING_SPEED = 50
 
 const animateSelectionSort = (barHeights: number[], callback?: () => void): void => {
   const [arrayStates, animationSequence] = selectionSort(barHeights)
-  const bars = document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
+  const bars = getAllBars()
 
   for (let i = 0; i < animationSequence.length; i++) {
     let firstIteration = i === 0
@@ -77,6 +78,46 @@ const animateSelectionSort = (barHeights: number[], callback?: () => void): void
   }
 }
 
+const animateInsertionSort = (barHeights: number[], callback?: () => void): void => {
+  const animationSequence = insertionSort(barHeights)
+  const bars = getAllBars()
+
+  for (let i = 0; i < animationSequence.length; i++) {
+    const {
+      idx: idxToInsertTo,
+      moveFrom: barToMove,
+      shift: rightShift,
+    } = animationSequence[i]
+    const isFirstIteration = i === 0
+    const isLastIteration = i === animationSequence.length - 1
+
+    let prevIdxBarHeights = []
+
+    setTimeout(() => {
+      if (!isFirstIteration) {
+        changeBarsColor(bars[animationSequence[i - 1].idx], INACTIVE_BAR_COLOR)
+      }
+
+      prevIdxBarHeights.push(bars[idxToInsertTo].style.height)
+      makeBarsActive([{ element: bars[idxToInsertTo], height: barHeights[barToMove] }])
+    }, i * SORTING_SPEED)
+
+    for (let x = 1; x <= rightShift; x++) {
+      setTimeout(() => {
+        prevIdxBarHeights.push(bars[idxToInsertTo + x].style.height)
+        bars[idxToInsertTo + x].style.height = prevIdxBarHeights[x - 1]
+
+        const isLastInnerIteration = x === rightShift
+        if (isLastInnerIteration && isLastIteration) {
+          changeBarsColor(bars[idxToInsertTo], INACTIVE_BAR_COLOR)
+          postSortAnimation(bars, ACTIVE_BAR_COLOR)
+          if (callback) callback()
+        }
+      }, i * SORTING_SPEED)
+    }
+  }
+}
+
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState([])
   const [sortState, setSortState] = useState<SortingState>("Sort")
@@ -84,8 +125,14 @@ const Home: React.FC = () => {
     "Selection"
   )
 
+  const barsEl = useRef([])
+
   const bars = barHeights.map((heightValue, idx) => (
-    <Bar key={idx} height={heightValue} />
+    <Bar
+      key={idx}
+      height={heightValue}
+      ref={(element) => (barsEl.current[idx] = element)}
+    />
   ))
 
   const getNewBarHeights = () => {
@@ -93,15 +140,14 @@ const Home: React.FC = () => {
     setBarHeights(newBarHeights)
   }
 
-  const makeAllBarsInactive = () => {
-    const allBars = getAllBars()
-    changeBarsColor(allBars, INACTIVE_BAR_COLOR)
-  }
-
   useEffect(() => {
     getNewBarHeights()
     setSortState("Sort")
-    makeAllBarsInactive()
+    // requestAnimationFrame is used to defer the function execution after
+    // the browser has finished painting.
+    window.requestAnimationFrame(() => {
+      changeBarsColor(barsEl.current, INACTIVE_BAR_COLOR)
+    })
   }, [selectedAlgorithm])
 
   return (
@@ -115,7 +161,7 @@ const Home: React.FC = () => {
             sortState={sortState}
             clickAction={() => {
               setSortState("Sorting")
-              animateSelectionSort(barHeights, () => setSortState("Sorted"))
+              animateInsertionSort(barHeights, () => setSortState("Sorted"))
             }}
           />
           <AlgorithmSelector
