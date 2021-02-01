@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { selectionSort } from "../algorithms/selectionSort"
+import { selectionSort } from "../algorithms/selection-sort"
 import { Bar } from "../components/Bar"
 import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
@@ -14,7 +14,7 @@ import { Grid } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
 import { ActiveBar, SortingAlgorithms, SortingState } from "../types"
-import { insertionSort } from "../algorithms/insertionSort"
+import { insertionSort } from "../algorithms/insertion-sort"
 
 /**
  * Sorting speed in miliseconds
