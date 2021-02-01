@@ -20,8 +20,8 @@ export const generateBarHeights = (amountOfBar: number): number[] => {
 const isSingleHTMLElement = (
   element: HTMLElement | HTMLCollectionOf<HTMLElement> | HTMLElement[]
 ): element is HTMLElement => {
-  const isHTMLCollection = (element as HTMLCollectionOf<HTMLElement>)[1]
-  const isArray = (element as HTMLElement[])[1]
+  const isHTMLCollection = HTMLCollection.prototype.isPrototypeOf(element)
+  const isArray = Array.isArray(element)
 
   if (isHTMLCollection) {
     return false
@@ -36,14 +36,12 @@ export const changeBarsColor = (
   bar: HTMLElement | HTMLCollectionOf<HTMLElement> | HTMLElement[],
   endColor: string
 ): void => {
-  const changeColor = (element: HTMLElement) => (element.style.backgroundColor = endColor)
-
   if (!isSingleHTMLElement(bar)) {
     for (let i = 0; i < bar.length; i++) {
-      changeColor(bar[i])
+      bar[i].style.backgroundColor = endColor
     }
   } else {
-    changeColor(bar)
+    bar.style.backgroundColor = endColor
   }
 }
 
