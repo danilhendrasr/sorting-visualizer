@@ -1,34 +1,50 @@
-/**
- * Sort the given array using insertion sort algorithm
- * @param arrayToSort Array of number, representing the unsorted array
- */
-export const insertionSort = (arrayToSort: number[]): number[] => {
+interface InsertionAnimationSequence {
+  idx: number
+  moveFrom: number
+  shift: number
+}
+
+export const insertionSort = (arrayToSort: number[]): InsertionAnimationSequence[] => {
+  let animaSeq: InsertionAnimationSequence[] = []
   let sortedArray: number[] = []
 
   for (let i = 0; i < arrayToSort.length; i++) {
+    const currentItem: number = arrayToSort[i]
+
     const isFirstIteration: boolean = i === 0
     if (isFirstIteration) {
-      sortedArray.push(arrayToSort[i])
+      animaSeq.push({ idx: 0, moveFrom: i, shift: 0 })
+      sortedArray.push(currentItem)
       continue
     }
 
-    let currentItem = arrayToSort[i]
-    for (let x = sortedArray.length - 1; x >= 0; x--) {
-      const isLastInnerIteration: boolean = x === 0
+    for (let j = sortedArray.length - 1; j >= 0; j--) {
+      const isLastInneriteration: boolean = j === 0
 
-      let leftSide: number = sortedArray[x - 1] ?? -Infinity
-      let rightSide: number = sortedArray[x]
+      const leftSide: number = isLastInneriteration ? -Infinity : sortedArray[j - 1]
+      const rightSide: number = sortedArray[j]
 
-      if (leftSide >= currentItem && currentItem <= rightSide) {
-        const aboveXIdx = sortedArray.splice(x)
+      const isLeftSideLesser: boolean = leftSide <= currentItem
+      const isRightSideGreater: boolean = currentItem <= rightSide
+
+      if (isLeftSideLesser && isRightSideGreater) {
+        const aboveRightSide = sortedArray.splice(j)
+
+        animaSeq.push({
+          idx: sortedArray.length,
+          moveFrom: i,
+          shift: aboveRightSide.length,
+        })
+
         sortedArray.push(currentItem)
-        sortedArray = sortedArray.concat(aboveXIdx)
+        sortedArray = sortedArray.concat(aboveRightSide)
         break
-      } else if (isLastInnerIteration) {
+      } else if (isLastInneriteration) {
+        animaSeq.push({ idx: sortedArray.length, moveFrom: i, shift: 0 })
         sortedArray.push(currentItem)
       }
     }
   }
 
-  return sortedArray
+  return animaSeq
 }
