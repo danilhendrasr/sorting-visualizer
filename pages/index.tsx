@@ -13,7 +13,7 @@ import {
 import { Grid } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
-import { ActiveBar, SortingState } from "../types"
+import { ActiveBar, SortingAlgorithms, SortingState } from "../types"
 import { insertionSort } from "../algorithms/insertionSort"
 
 /**
@@ -118,6 +118,21 @@ const animateInsertionSort = (barHeights: number[], callback?: () => void): void
   }
 }
 
+const startAnimation = (
+  sortingAlgorithm: SortingAlgorithms,
+  barHeights: number[],
+  callback?: () => void
+): void => {
+  switch (sortingAlgorithm) {
+    case "Selection":
+      animateSelectionSort(barHeights, callback)
+      break
+    case "Insertion":
+      animateInsertionSort(barHeights, callback)
+      break
+  }
+}
+
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState([])
   const [sortState, setSortState] = useState<SortingState>("Sort")
@@ -125,13 +140,13 @@ const Home: React.FC = () => {
     "Selection"
   )
 
-  const barsEl = useRef([])
+  const barsEl = useRef<HTMLDivElement[]>([])
 
   const bars = barHeights.map((heightValue, idx) => (
     <Bar
       key={idx}
       height={heightValue}
-      ref={(element) => (barsEl.current[idx] = element)}
+      elRef={(element) => (barsEl.current[idx] = element)}
     />
   ))
 
@@ -161,7 +176,9 @@ const Home: React.FC = () => {
             sortState={sortState}
             clickAction={() => {
               setSortState("Sorting")
-              animateInsertionSort(barHeights, () => setSortState("Sorted"))
+              startAnimation(selectedAlgorithm as SortingAlgorithms, barHeights, () =>
+                setSortState("Sorted")
+              )
             }}
           />
           <AlgorithmSelector
