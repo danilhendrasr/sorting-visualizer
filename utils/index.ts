@@ -1,21 +1,13 @@
-/**
- * Generate a random integer between 2 integers. If floats are passed instead of integers, the function will round down the min value, and round up the max value.
- * @param min Minimum number (inclusive)
- * @param max Maximum number (exclusive)
- * @returns A random number between min and max
- */
+import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
+import { ActiveBar } from "../types"
+
 export const generateARandomNumber = (min: number, max: number): number => {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-/**
- * Generate x amount of numbers, each is between 1 - 100
- * @param amountOfBar How many bar heights to generate
- * @returns An array of numbers, representing bar heights
- */
-export const generateNewBarHeights = (amountOfBar: number): number[] => {
+export const generateBarHeights = (amountOfBar: number): number[] => {
   let newBarHeights: number[] = []
   for (let i = 0; i < amountOfBar; i++) {
     let randomHeight = generateARandomNumber(1, 101)
@@ -23,4 +15,56 @@ export const generateNewBarHeights = (amountOfBar: number): number[] => {
   }
 
   return newBarHeights
+}
+
+const isSingleHTMLElement = (
+  element: HTMLElement | HTMLCollectionOf<HTMLElement> | HTMLElement[]
+): element is HTMLElement => {
+  const isHTMLCollection = HTMLCollection.prototype.isPrototypeOf(element)
+  const isArray = Array.isArray(element)
+
+  if (isHTMLCollection) {
+    return false
+  } else if (isArray) {
+    return false
+  } else {
+    return true
+  }
+}
+
+export const changeBarsColor = (
+  bar: HTMLElement | HTMLCollectionOf<HTMLElement> | HTMLElement[],
+  endColor: string
+): void => {
+  if (!isSingleHTMLElement(bar)) {
+    for (let i = 0; i < bar.length; i++) {
+      bar[i].style.backgroundColor = endColor
+    }
+  } else {
+    bar.style.backgroundColor = endColor
+  }
+}
+
+export const makeBarsActive = (bars: ActiveBar[]): void => {
+  for (const bar of bars) {
+    changeBarsColor(bar.element, ACTIVE_BAR_COLOR)
+    bar.element.style.height = `${bar.height}%`
+  }
+}
+
+export const getAllBars = (): HTMLCollectionOf<HTMLElement> => {
+  const bars = document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
+  return bars
+}
+
+export const postSortAnimation = (
+  bars: HTMLCollectionOf<HTMLElement>,
+  endColor: string
+): void => {
+  for (let n = 0; n < bars.length; n++) {
+    setTimeout(() => {
+      let nThBar = bars[n]
+      changeBarsColor(nThBar, endColor)
+    }, n * 10)
+  }
 }
