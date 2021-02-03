@@ -9,6 +9,7 @@ import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingState } from "../types"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
+import { default as Head } from "next/head"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -42,14 +43,11 @@ const Home: React.FC = () => {
     />
   ))
 
-  const getNewBarHeights = () => {
+  useEffect(() => {
     const newBarHeights = generateBarHeights(100)
     setBarHeights(newBarHeights)
-  }
-
-  useEffect(() => {
-    getNewBarHeights()
     setSortState("Sort")
+
     // requestAnimationFrame is used to defer the function execution after
     // the browser has finished painting.
     window.requestAnimationFrame(() => {
@@ -58,28 +56,34 @@ const Home: React.FC = () => {
   }, [selectedAlgorithm])
 
   return (
-    <Grid.Container justify="center" style={{ height: "100vh" }}>
-      <Grid xs={24} style={{ paddingTop: "40px" }}>
-        <ChartWrapper bars={bars} />
-      </Grid>
-      <Grid xs={24}>
-        <div>
-          <SortButton
-            sortState={sortState}
-            clickAction={() => {
-              setSortState("Sorting")
-              startAnimation(selectedAlgorithm as SortingAlgorithms, barHeights, () =>
-                setSortState("Sorted")
-              )
-            }}
-          />
-          <AlgorithmSelector
-            selectedAlgorithm={selectedAlgorithm}
-            onChangeHandler={setSelectedAlgorithm}
-          />
-        </div>
-      </Grid>
-    </Grid.Container>
+    <>
+      <Head>
+        <title>Sorting Algorithms Visualizer</title>
+      </Head>
+
+      <Grid.Container justify="center" style={{ height: "100vh" }}>
+        <Grid xs={24} style={{ paddingTop: "40px" }}>
+          <ChartWrapper bars={bars} />
+        </Grid>
+        <Grid xs={24}>
+          <div>
+            <SortButton
+              sortState={sortState}
+              clickAction={() => {
+                setSortState("Sorting")
+                startAnimation(selectedAlgorithm as SortingAlgorithms, barHeights, () =>
+                  setSortState("Sorted")
+                )
+              }}
+            />
+            <AlgorithmSelector
+              selectedAlgorithm={selectedAlgorithm}
+              onChangeHandler={setSelectedAlgorithm}
+            />
+          </div>
+        </Grid>
+      </Grid.Container>
+    </>
   )
 }
 
