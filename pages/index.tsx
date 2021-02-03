@@ -12,14 +12,9 @@ import {
 } from "../utils/index"
 import { Grid } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
-import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
+import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR, SORTING_SPEED } from "../constants"
 import { ActiveBar, SortingAlgorithms, SortingState } from "../types"
 import { insertionSort } from "../algorithms/insertion-sort"
-
-/**
- * Sorting speed in miliseconds
- */
-const SORTING_SPEED = 50
 
 const animateSelectionSort = (barHeights: number[], callback?: () => void): void => {
   const [arrayStates, animationSequence] = selectionSort(barHeights)
