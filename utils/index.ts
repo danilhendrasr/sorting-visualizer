@@ -68,3 +68,12 @@ export const postSortAnimation = (
     }, n * 10)
   }
 }
+
+export const getNumberFromHeightString = (height: string): number => {
+  const unitlessHeight = height.replace(
+    /(cm|mm|in|px|pt|pc|em|rem|vw|vh|vmin|vmax|ex|ch|%)$/,
+    ""
+  )
+
+  return parseInt(unitlessHeight)
+}
