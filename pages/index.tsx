@@ -10,6 +10,7 @@ import { INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingState } from "../types"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { default as Head } from "next/head"
+import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -22,6 +23,9 @@ const startAnimation = (
       break
     case "Insertion":
       animateInsertionSort(barHeights, callback)
+      break
+    case "Bubble":
+      animateBubbleSort(barHeights, callback)
       break
   }
 }
