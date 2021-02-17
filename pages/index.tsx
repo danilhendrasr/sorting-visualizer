@@ -81,6 +81,7 @@ const Home: React.FC = () => {
               }}
             />
             <AlgorithmSelector
+              disabled={sortState === "Sorting" ? true : false}
               selectedAlgorithm={selectedAlgorithm}
               onChangeHandler={setSelectedAlgorithm}
             />
