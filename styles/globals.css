@@ -22,5 +22,4 @@ a {
 
 .bar {
   width: 2px;
-  transition: height 0.3s, background-color 0.2s;
 }
