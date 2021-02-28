@@ -4,7 +4,7 @@ import { Bar } from "../components/Bar"
 import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
 import { generateBarHeights, changeBarsColor } from "../utils/index"
-import { Grid } from "@geist-ui/react"
+import { Grid, Row, Spacer } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingState } from "../types"
@@ -65,29 +65,28 @@ const Home: React.FC = () => {
         <title>Sorting Algorithms Visualizer</title>
       </Head>
 
-      <Grid.Container justify="center" style={{ height: "100vh" }}>
-        <Grid xs={24} style={{ paddingTop: "40px" }}>
-          <ChartWrapper bars={bars} />
-        </Grid>
-        <Grid xs={24}>
-          <div>
-            <SortButton
-              sortState={sortState}
-              clickAction={() => {
-                setSortState("Sorting")
-                startAnimation(selectedAlgorithm as SortingAlgorithms, barHeights, () =>
-                  setSortState("Sorted")
-                )
-              }}
-            />
-            <AlgorithmSelector
-              disabled={sortState === "Sorting" ? true : false}
-              selectedAlgorithm={selectedAlgorithm}
-              onChangeHandler={setSelectedAlgorithm}
-            />
-          </div>
-        </Grid>
-      </Grid.Container>
+      <Spacer y={1.3} />
+      <Row justify="center">
+        <ChartWrapper bars={bars} />
+      </Row>
+      <Spacer y={2} />
+      <Row justify="center">
+        <SortButton
+          sortState={sortState}
+          clickAction={() => {
+            setSortState("Sorting")
+            startAnimation(selectedAlgorithm as SortingAlgorithms, barHeights, () =>
+              setSortState("Sorted")
+            )
+          }}
+        />
+        <Spacer x={1} />
+        <AlgorithmSelector
+          disabled={sortState === "Sorting" ? true : false}
+          selectedAlgorithm={selectedAlgorithm}
+          onChangeHandler={setSelectedAlgorithm}
+        />
+      </Row>
     </>
   )
 }
