@@ -25,11 +25,7 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
     clickAction()
   }
   return (
-    <Button
-      loading={isSorting}
-      type={"secondary"}
-      onClick={onClick}
-      style={{ display: "block", margin: "0 auto" }}>
+    <Button loading={isSorting} type="secondary" onClick={onClick}>
       {isSorted && (
         <>
           <Check size={20} />
