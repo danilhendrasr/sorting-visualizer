@@ -89,7 +89,8 @@ const Home: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: 366,
+            width: 330,
+            boxShadow: "5px 0 10px #efefef",
           }}>
           <Spacer y={1} />
           <Text h1 size="2em" style={{ textAlign: "center" }}>
@@ -152,18 +153,21 @@ const Home: React.FC = () => {
             type="error">
             Reset
           </Button>
-          <Spacer y={2.5} />
+          <Spacer y={1.7} />
           <a
             className={styles["github-icon-wrapper"]}
             href="https://github.com/danilhendrasr/sorting-visualizer"
             target="_blank">
             <Github size={20} color="#000" />
           </a>
+          <Text size=".7em">
+            &copy; {new Date().getFullYear()} - Danil Hendra Suryawan
+          </Text>
         </div>
         <div
           style={{
             justifyContent: "center",
-            width: "calc(100vw - 366px)",
+            width: "calc(100vw - 330px)",
             alignItems: "center",
             height: "80%",
             alignSelf: "flex-end",
