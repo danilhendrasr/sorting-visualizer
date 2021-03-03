@@ -10,7 +10,7 @@ export const generateARandomNumber = (min: number, max: number): number => {
 export const generateBarHeights = (amountOfBar: number): number[] => {
   let newBarHeights: number[] = []
   for (let i = 0; i < amountOfBar; i++) {
-    let randomHeight = generateARandomNumber(1, 101)
+    let randomHeight = generateARandomNumber(1, 50)
     newBarHeights.push(randomHeight)
   }
 
