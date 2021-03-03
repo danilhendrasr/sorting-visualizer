@@ -1,4 +1,4 @@
-import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR, SORTING_SPEED } from "../constants"
+import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
 import {
   changeBarsColor,
   getAllBars,
@@ -42,7 +42,11 @@ const bubbleSort = (array: number[]): [number, number][] => {
   return animaSeq
 }
 
-export const animateBubbleSort = (barHeights: number[], callback?: () => void): void => {
+export const animateBubbleSort = (
+  barHeights: number[],
+  sortingSpeed: number,
+  callback?: () => void
+): void => {
   const animationSequence = bubbleSort(barHeights)
   const bars = getAllBars()
 
@@ -74,6 +78,6 @@ export const animateBubbleSort = (barHeights: number[], callback?: () => void): 
         postSortAnimation(bars, ACTIVE_BAR_COLOR)
         callback()
       }
-    }, iteration * SORTING_SPEED)
+    }, iteration * sortingSpeed)
   })
 }

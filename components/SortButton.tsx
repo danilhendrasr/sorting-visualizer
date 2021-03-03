@@ -26,10 +26,10 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
   }
   return (
     <Button
-      disabled={text !== "Sort"}
+      style={text === "Sorted" ? { pointerEvents: "none" } : undefined}
       loading={isSorting}
       onClick={onClick}
-      shadow
+      shadow={text === "Sort"}
       type="secondary">
       {isSorted && (
         <>

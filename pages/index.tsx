@@ -7,7 +7,7 @@ import { generateBarHeights, changeBarsColor } from "../utils/index"
 import { Button, ButtonGroup, Slider, Spacer, Text } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { INACTIVE_BAR_COLOR } from "../constants"
-import { SortingAlgorithms, SortingState } from "../types"
+import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { default as Head } from "next/head"
 import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
@@ -18,19 +18,31 @@ import styles from "../styles/Home.module.css"
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
   barHeights: number[],
+  sortingSpeed: number,
   callback?: () => void
 ): void => {
   switch (sortingAlgorithm) {
     case "Selection":
-      animateSelectionSort(barHeights, callback)
+      animateSelectionSort(barHeights, sortingSpeed, callback)
       break
     case "Insertion":
-      animateInsertionSort(barHeights, callback)
+      animateInsertionSort(barHeights, sortingSpeed, callback)
       break
     case "Bubble":
-      animateBubbleSort(barHeights, callback)
+      animateBubbleSort(barHeights, sortingSpeed, callback)
       break
   }
+}
+
+const activeSortingSpeedBtn: React.CSSProperties = {
+  backgroundColor: "#000",
+  color: "#fff",
+}
+
+const sortingSpeedTable: SortingSpeeds = {
+  slow: 160,
+  normal: 80,
+  fast: 40,
 }
 
 const Home: React.FC = () => {
@@ -40,6 +52,7 @@ const Home: React.FC = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string | string[]>(
     "Selection"
   )
+  const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
   const barsEl = useRef<HTMLDivElement[]>([])
 
@@ -127,9 +140,21 @@ const Home: React.FC = () => {
               size="small"
               style={{ margin: "5px" }}
               type="secondary">
-              <Button>Slow</Button>
-              <Button>Normal</Button>
-              <Button>Fast</Button>
+              <Button
+                style={sortingSpeed === "slow" ? activeSortingSpeedBtn : undefined}
+                onClick={() => setSortingSpeed("slow")}>
+                Slow
+              </Button>
+              <Button
+                style={sortingSpeed === "normal" ? activeSortingSpeedBtn : undefined}
+                onClick={() => setSortingSpeed("normal")}>
+                Normal
+              </Button>
+              <Button
+                style={sortingSpeed === "fast" ? activeSortingSpeedBtn : undefined}
+                onClick={() => setSortingSpeed("fast")}>
+                Fast
+              </Button>
             </ButtonGroup>
           </div>
           <Spacer y={1.5} />
@@ -137,8 +162,11 @@ const Home: React.FC = () => {
             sortState={sortState}
             clickAction={() => {
               setSortState("Sorting")
-              startAnimation(selectedAlgorithm as SortingAlgorithms, barHeights, () =>
-                setSortState("Sorted")
+              startAnimation(
+                selectedAlgorithm as SortingAlgorithms,
+                barHeights,
+                sortingSpeedTable[sortingSpeed],
+                () => setSortState("Sorted")
               )
             }}
           />
