@@ -1,4 +1,4 @@
-import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
+import { ACTIVE_BAR_COLOR } from "../constants"
 import { ActiveBar } from "../types"
 
 export const generateARandomNumber = (min: number, max: number): number => {
@@ -9,11 +9,10 @@ export const generateARandomNumber = (min: number, max: number): number => {
 
 export const generateBarHeights = (amountOfBar: number): number[] => {
   let newBarHeights: number[] = []
-  for (let i = 0; i < amountOfBar; i++) {
-    let randomHeight = generateARandomNumber(1, 50)
-    newBarHeights.push(randomHeight)
+  while (newBarHeights.length < amountOfBar) {
+    const randomHeight = generateARandomNumber(1, 100)
+    if (newBarHeights.indexOf(randomHeight) === -1) newBarHeights.push(randomHeight)
   }
-
   return newBarHeights
 }
 

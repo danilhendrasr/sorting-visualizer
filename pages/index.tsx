@@ -83,7 +83,7 @@ const Home: React.FC = () => {
         <title>Sorting Algorithms Visualizer</title>
       </Head>
 
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", height: "100vh" }}>
         <div
           style={{
             display: "flex",
@@ -110,8 +110,9 @@ const Home: React.FC = () => {
               disabled={sortState === "Sorting"}
               min={10}
               max={100}
-              step={10}
               onChange={(value) => setBarLength(value)}
+              showMarkers
+              step={10}
               style={{ width: "100%" }}
               value={barLength}
             />
@@ -164,6 +165,8 @@ const Home: React.FC = () => {
             justifyContent: "center",
             width: "calc(100vw - 366px)",
             alignItems: "center",
+            height: "80%",
+            alignSelf: "flex-end",
           }}>
           <ChartWrapper bars={bars} />
         </div>
