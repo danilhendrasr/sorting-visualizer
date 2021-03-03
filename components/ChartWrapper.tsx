@@ -3,9 +3,10 @@ export const ChartWrapper: React.FC<{ bars: JSX.Element[] }> = (props) => {
   return (
     <div
       style={{
-        height: "80vh",
+        height: "100vh",
         display: "flex",
         alignItems: "flex-end",
+        margin: "0 auto",
         width: "fit-content",
       }}>
       {bars}
