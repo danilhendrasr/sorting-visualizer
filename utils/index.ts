@@ -8,12 +8,12 @@ export const generateARandomNumber = (min: number, max: number): number => {
 }
 
 export const generateBarHeights = (amountOfBar: number): number[] => {
-  let newBarHeights: number[] = []
-  while (newBarHeights.length < amountOfBar) {
+  let newBarHeights: Set<number> = new Set<number>()
+  while (newBarHeights.size < amountOfBar) {
     const randomHeight = generateARandomNumber(1, 100)
-    if (newBarHeights.indexOf(randomHeight) === -1) newBarHeights.push(randomHeight)
+    newBarHeights.add(randomHeight)
   }
-  return newBarHeights
+  return Array.from(newBarHeights)
 }
 
 const isSingleHTMLElement = (
