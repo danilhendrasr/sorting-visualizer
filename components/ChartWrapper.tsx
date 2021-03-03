@@ -7,7 +7,8 @@ export const ChartWrapper: React.FC<{ bars: JSX.Element[] }> = (props) => {
         display: "flex",
         alignItems: "flex-end",
         margin: "0 auto",
-        width: "fit-content",
+        width: "100%",
+        justifyContent: "space-evenly",
       }}>
       {bars}
     </div>

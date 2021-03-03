@@ -47,6 +47,7 @@ const Home: React.FC = () => {
     <Bar
       key={idx}
       height={heightValue}
+      width={Math.floor(window.innerWidth / barLength) / 2}
       elRef={(element) => (barsEl.current[idx] = element)}
     />
   ))
@@ -68,7 +69,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     resetBars()
-    resetBarColors()
     console.log(barsEl.current)
   }, [barLength])
 
