@@ -19,8 +19,9 @@ export const AlgorithmSelector: React.FC<{
   return (
     <Select
       disabled={disabled}
+      initialValue={selectedAlgorithm}
       onChange={(algorithm) => onChangeHandler(algorithm)}
-      initialValue={selectedAlgorithm}>
+      size="large">
       {selectOptions}
     </Select>
   )
