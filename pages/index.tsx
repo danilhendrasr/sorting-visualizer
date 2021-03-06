@@ -81,15 +81,12 @@ const Home: React.FC = () => {
             Sorting Algorithms Visualizer
           </Text>
           <Spacer y={1} />
-          <div className={homeStyles.sideBarInputContainer}>
-            <Text>Select Algorithm</Text>
-            <Spacer y={-0.4} />
-            <AlgorithmSelector
-              disabled={sortState === "Sorting"}
-              selectedAlgorithm={selectedAlgorithm}
-              onChangeHandler={setSelectedAlgorithm}
-            />
-          </div>
+          <AlgorithmSelector
+            containerClass={homeStyles.sideBarInputContainer}
+            disabled={sortState === "Sorting"}
+            selectedAlgorithm={selectedAlgorithm}
+            onChangeHandler={setSelectedAlgorithm}
+          />
           <div className={homeStyles.sideBarInputContainer}>
             <Text>Length of array</Text>
             <Slider
