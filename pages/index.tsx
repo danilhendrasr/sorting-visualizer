@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { Bar } from "../components/Bar"
 import { ChartWrapper } from "../components/ChartWrapper"
@@ -6,14 +6,14 @@ import { SortButton } from "../components/SortButton"
 import { generateBarHeights, changeBarsColor, getAllBars } from "../utils/index"
 import { Button, ButtonGroup, Slider, Spacer, Text } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
-import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
+import { INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { default as Head } from "next/head"
 import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
 import { Github } from "@geist-ui/react-icons"
 // @ts-ignore
-import styles from "../styles/Home.module.css"
+import homeStyles from "../styles/Home.module.scss"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -84,30 +84,24 @@ const Home: React.FC = () => {
         <title>Sorting Algorithms Visualizer</title>
       </Head>
 
-      <div style={{ display: "flex", height: "100vh" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: 330,
-            boxShadow: "5px 0 10px #efefef",
-          }}>
+      <div className={homeStyles.container}>
+        <div className={homeStyles.sidebarContainer}>
           <Spacer y={1} />
-          <Text h1 size="2em" style={{ textAlign: "center" }}>
+          <Text h1 size="2em" className={homeStyles.textCenter}>
             Sorting Algorithms Visualizer
           </Text>
-          <Spacer y={2} />
-          <div>
-            <Text style={{ marginBottom: "5px" }}>Select Algorithm</Text>
+          <Spacer y={1} />
+          <div className={homeStyles.sideBarInputContainer}>
+            <Text>Select Algorithm</Text>
+            <Spacer y={-0.4} />
             <AlgorithmSelector
-              disabled={sortState === "Sorting" ? true : false}
+              disabled={sortState === "Sorting"}
               selectedAlgorithm={selectedAlgorithm}
               onChangeHandler={setSelectedAlgorithm}
             />
           </div>
-          <div style={{ width: "200px" }}>
-            <Text style={{ marginBottom: "10px" }}>Length of array</Text>
+          <div className={homeStyles.sideBarInputContainer}>
+            <Text>Length of array</Text>
             <Slider
               disabled={sortState === "Sorting"}
               min={10}
@@ -115,18 +109,17 @@ const Home: React.FC = () => {
               onChange={(value) => setBarLength(value)}
               showMarkers
               step={10}
-              style={{ width: "100%" }}
               value={barLength}
             />
           </div>
           <Spacer y={0.6} />
-          <div style={{ width: "200px" }}>
-            <Text style={{ marginBottom: "3px" }}>Speed</Text>
+          <div className={homeStyles.sideBarInputContainer}>
+            <Text>Speed</Text>
+            <Spacer y={-0.6} />
             <ButtonGroup
               disabled={sortState === "Sorting"}
               ghost
               size="small"
-              style={{ margin: "5px" }}
               type="secondary">
               <Button
                 style={sortingSpeed === "slow" ? activeSortingSpeedBtn : undefined}
@@ -168,7 +161,7 @@ const Home: React.FC = () => {
           </Button>
           <Spacer y={1.7} />
           <a
-            className={styles["github-icon-wrapper"]}
+            className={homeStyles.githubIconWrapper}
             href="https://github.com/danilhendrasr/sorting-visualizer"
             target="_blank">
             <Github size={20} color="#000" />
@@ -177,14 +170,7 @@ const Home: React.FC = () => {
             &copy; {new Date().getFullYear()} - Danil Hendra Suryawan
           </Text>
         </div>
-        <div
-          style={{
-            justifyContent: "center",
-            width: "calc(100vw - 330px)",
-            alignItems: "center",
-            height: "80%",
-            alignSelf: "flex-end",
-          }}>
+        <div className={homeStyles.chartWrapper}>
           <ChartWrapper bars={bars} />
         </div>
       </div>
