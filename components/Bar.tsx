@@ -3,9 +3,8 @@ import { useTheme } from "@geist-ui/react"
 export const Bar: React.FC<{
   height: number
   width: number
-  elRef: (element: HTMLDivElement) => void
 }> = (props) => {
-  const { height, width, elRef } = props
+  const { height, width } = props
 
   const { palette } = useTheme()
 
@@ -17,5 +16,5 @@ export const Bar: React.FC<{
     borderTopRightRadius: 5,
   }
 
-  return <div className="bar" style={barStylings} ref={elRef}></div>
+  return <div className="bar" style={barStylings}></div>
 }

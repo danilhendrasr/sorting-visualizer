@@ -3,10 +3,10 @@ import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { Bar } from "../components/Bar"
 import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
-import { generateBarHeights, changeBarsColor } from "../utils/index"
+import { generateBarHeights, changeBarsColor, getAllBars } from "../utils/index"
 import { Button, ButtonGroup, Slider, Spacer, Text } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
-import { INACTIVE_BAR_COLOR } from "../constants"
+import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { default as Head } from "next/head"
@@ -54,41 +54,29 @@ const Home: React.FC = () => {
   )
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
-  const barsEl = useRef<HTMLDivElement[]>([])
-
   const bars = barHeights.map((heightValue, idx) => (
     <Bar
       key={idx}
       height={heightValue}
       width={Math.floor(window.innerWidth / barLength) / 2}
-      elRef={(element) => (barsEl.current[idx] = element)}
     />
   ))
 
   const resetBars = (): void => {
     const newBarHeights = generateBarHeights(barLength)
-    barsEl.current.length = newBarHeights.length
     setBarHeights(newBarHeights)
     setSortState("Sort")
-  }
-
-  const resetBarColors = (): void => {
-    // requestAnimationFrame is used to defer the function execution after
-    // the browser has finished painting.
     window.requestAnimationFrame(() => {
-      changeBarsColor(barsEl.current, INACTIVE_BAR_COLOR)
+      const barsDomEl = getAllBars()
+      if (barsDomEl[5].style.backgroundColor === "rgb(17, 17, 17)") {
+        changeBarsColor(barsDomEl, INACTIVE_BAR_COLOR)
+      }
     })
   }
 
-  useEffect(() => {
-    resetBars()
-    console.log(barsEl.current)
-  }, [barLength])
+  useEffect(resetBars, [barLength])
 
-  useEffect(() => {
-    resetBars()
-    resetBarColors()
-  }, [selectedAlgorithm])
+  useEffect(resetBars, [selectedAlgorithm])
 
   return (
     <>
@@ -174,10 +162,7 @@ const Home: React.FC = () => {
           <Button
             disabled={sortState === "Sorting"}
             ghost
-            onClick={() => {
-              resetBars()
-              resetBarColors()
-            }}
+            onClick={resetBars}
             type="error">
             Reset
           </Button>
