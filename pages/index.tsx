@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { Bar } from "../components/Bar"
 import { SortButton } from "../components/SortButton"
+import { ArrayLengthModifier } from "../components/ArrayLengthModifier"
 import { generateBarHeights, changeBarsColor, getAllBars } from "../utils/index"
 import { Button, ButtonGroup, Slider, Spacer, Text } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
@@ -87,19 +88,13 @@ const Home: React.FC = () => {
             selectedAlgorithm={selectedAlgorithm}
             onChangeHandler={setSelectedAlgorithm}
           />
-          <div className={homeStyles.sideBarInputContainer}>
-            <Text>Length of array</Text>
-            <Slider
-              disabled={sortState === "Sorting"}
-              min={10}
-              max={100}
-              onChange={(value) => setBarLength(value)}
-              showMarkers
-              step={10}
-              value={barLength}
-            />
-          </div>
-          <Spacer y={0.6} />
+          <ArrayLengthModifier
+            containerClass={homeStyles.sideBarInputContainer}
+            disabled={sortState === "Sorting"}
+            value={barLength}
+            onChange={(value) => setBarLength(value)}
+          />
+          <Spacer y={0.5} />
           <div className={homeStyles.sideBarInputContainer}>
             <Text>Speed</Text>
             <Spacer y={-0.6} />
