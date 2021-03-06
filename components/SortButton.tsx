@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Button, Spacer } from "@geist-ui/react"
-import { Check } from "@geist-ui/react-icons"
+import { Check, Play } from "@geist-ui/react-icons"
 import { SortingState } from "../types"
 
 interface SortButtonProps {
@@ -13,9 +13,7 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
   const [text, setText] = useState<SortingState>("Sort")
 
   useEffect(() => {
-    if (sortState !== text) {
-      setText(sortState)
-    }
+    if (sortState !== text) setText(sortState)
   }, [sortState])
 
   let isSorting = text === "Sorting"
@@ -24,6 +22,7 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
     if (isSorted) return
     clickAction()
   }
+
   return (
     <Button
       style={text === "Sorted" ? { pointerEvents: "none" } : undefined}
@@ -31,12 +30,13 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
       onClick={onClick}
       shadow={text === "Sort"}
       type="secondary">
+      {text === "Sort" && <Play size={15} />}
       {isSorted && (
         <>
           <Check size={20} />
-          <Spacer inline x={0.2} />
         </>
       )}
+      <Spacer inline x={0.2} />
       {text}
     </Button>
   )
