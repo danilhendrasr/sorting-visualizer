@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { Bar } from "../components/Bar"
-import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
 import { generateBarHeights, changeBarsColor, getAllBars } from "../utils/index"
 import { Button, ButtonGroup, Slider, Spacer, Text } from "@geist-ui/react"
@@ -54,14 +53,6 @@ const Home: React.FC = () => {
   )
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
-  const bars = barHeights.map((heightValue, idx) => (
-    <Bar
-      key={idx}
-      height={heightValue}
-      width={Math.floor(window.innerWidth / barLength) / 2}
-    />
-  ))
-
   const resetBars = (): void => {
     const newBarHeights = generateBarHeights(barLength)
     setBarHeights(newBarHeights)
@@ -75,7 +66,6 @@ const Home: React.FC = () => {
   }
 
   useEffect(resetBars, [barLength])
-
   useEffect(resetBars, [selectedAlgorithm])
 
   return (
@@ -170,8 +160,14 @@ const Home: React.FC = () => {
             &copy; {new Date().getFullYear()} - Danil Hendra Suryawan
           </Text>
         </div>
-        <div className={homeStyles.chartWrapper}>
-          <ChartWrapper bars={bars} />
+        <div className={homeStyles.barsContainer}>
+          {barHeights.map((heightValue, idx) => (
+            <Bar
+              key={idx}
+              height={heightValue}
+              width={Math.floor(window.innerWidth / barLength) / 2}
+            />
+          ))}
         </div>
       </div>
     </>

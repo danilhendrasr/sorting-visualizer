@@ -37,11 +37,12 @@
   }
 }
 
-/* ===================== Chart section ===================== */
-.chartWrapper {
-  align-items: "center";
+/* ===================== Bars display ===================== */
+.barsContainer {
+  align-items: flex-end;
   align-self: flex-end;
+  display: flex;
   height: 80%;
-  justify-content: center;
+  justify-content: space-evenly;
   width: calc(100vw - 330px);
 }
