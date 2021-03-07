@@ -1,5 +1,5 @@
 import { ACTIVE_BAR_COLOR } from "../constants"
-import { ActiveBar } from "../types"
+import { ActiveBar, SortingSpeeds } from "../types"
 
 export const generateARandomNumber = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -75,4 +75,10 @@ export const getNumberFromHeightString = (height: string): number => {
   )
 
   return parseInt(unitlessHeight)
+}
+
+export const sortingSpeedTable: SortingSpeeds = {
+  slow: 160,
+  normal: 80,
+  fast: 40,
 }

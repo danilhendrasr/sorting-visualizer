@@ -3,7 +3,12 @@ import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { Bar } from "../components/Bar"
 import { SortButton } from "../components/SortButton"
 import { ArrayLengthModifier } from "../components/ArrayLengthModifier"
-import { generateBarHeights, changeBarsColor, getAllBars } from "../utils/index"
+import {
+  generateBarHeights,
+  changeBarsColor,
+  getAllBars,
+  sortingSpeedTable,
+} from "../utils/index"
 import { Button, ButtonGroup, Slider, Spacer, Text } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { INACTIVE_BAR_COLOR } from "../constants"
@@ -14,6 +19,7 @@ import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
 import { Github } from "@geist-ui/react-icons"
 // @ts-ignore
 import homeStyles from "../styles/Home.module.scss"
+import { SpeedControl } from "../components/SpeedControl"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -32,17 +38,6 @@ const startAnimation = (
       animateBubbleSort(barHeights, sortingSpeed, callback)
       break
   }
-}
-
-const activeSortingSpeedBtn: React.CSSProperties = {
-  backgroundColor: "#000",
-  color: "#fff",
-}
-
-const sortingSpeedTable: SortingSpeeds = {
-  slow: 160,
-  normal: 80,
-  fast: 40,
 }
 
 const Home: React.FC = () => {
@@ -95,31 +90,11 @@ const Home: React.FC = () => {
             onChange={(value) => setBarLength(value)}
           />
           <Spacer y={0.5} />
-          <div className={homeStyles.sideBarInputContainer}>
-            <Text>Speed</Text>
-            <Spacer y={-0.6} />
-            <ButtonGroup
-              disabled={sortState === "Sorting"}
-              ghost
-              size="small"
-              type="secondary">
-              <Button
-                style={sortingSpeed === "slow" ? activeSortingSpeedBtn : undefined}
-                onClick={() => setSortingSpeed("slow")}>
-                Slow
-              </Button>
-              <Button
-                style={sortingSpeed === "normal" ? activeSortingSpeedBtn : undefined}
-                onClick={() => setSortingSpeed("normal")}>
-                Normal
-              </Button>
-              <Button
-                style={sortingSpeed === "fast" ? activeSortingSpeedBtn : undefined}
-                onClick={() => setSortingSpeed("fast")}>
-                Fast
-              </Button>
-            </ButtonGroup>
-          </div>
+          <SpeedControl
+            sortingSpeed={sortingSpeed}
+            sortState={sortState}
+            onSpeedChange={(speed: keyof SortingSpeeds) => setSortingSpeed(speed)}
+          />
           <Spacer y={1.5} />
           <SortButton
             sortState={sortState}
