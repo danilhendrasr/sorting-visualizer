@@ -20,6 +20,7 @@ import { Github } from "@geist-ui/react-icons"
 // @ts-ignore
 import homeStyles from "../styles/Home.module.scss"
 import { SpeedControl } from "../components/SpeedControl"
+import { LinkToRepo } from "../components/LinkToRepo"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -117,12 +118,7 @@ const Home: React.FC = () => {
             Reset
           </Button>
           <Spacer y={1.7} />
-          <a
-            className={homeStyles.githubIconWrapper}
-            href="https://github.com/danilhendrasr/sorting-visualizer"
-            target="_blank">
-            <Github size={20} color="#000" />
-          </a>
+          <LinkToRepo />
           <Text size=".7em">
             &copy; {new Date().getFullYear()} - Danil Hendra Suryawan
           </Text>
