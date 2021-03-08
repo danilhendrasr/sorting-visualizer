@@ -8,12 +8,12 @@ const algorithms: SortingAlgorithms[] = ["Selection", "Insertion", "Bubble"]
 
 interface Props {
   disabled: boolean
-  selectedAlgorithm: string
-  onChangeHandler: (algorithm: string) => void
+  selectedAlgorithm: SortingAlgorithms
+  onChange: (algorithm: SortingAlgorithms) => void
 }
 
 export const AlgorithmSelector: React.FC<Props> = (props) => {
-  let { disabled, selectedAlgorithm, onChangeHandler } = props
+  let { disabled, selectedAlgorithm, onChange } = props
 
   const selectOptions = algorithms.map((algorithm, idx) => (
     <Select.Option key={idx} value={algorithm}>
@@ -27,7 +27,7 @@ export const AlgorithmSelector: React.FC<Props> = (props) => {
       <Spacer y={-0.4} />
       <Select
         disabled={disabled}
-        onChange={(algorithm) => onChangeHandler(algorithm as string)}
+        onChange={(algorithm) => onChange(algorithm as SortingAlgorithms)}
         size="large"
         value={selectedAlgorithm}>
         {selectOptions}

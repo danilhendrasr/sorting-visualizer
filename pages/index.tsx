@@ -25,11 +25,25 @@ import { INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { default as Head } from "next/head"
 
+const getBarElementsFromBarHeights = (barHeights: number[]): JSX.Element[] => {
+  const bars = barHeights.map((heightValue, idx) => (
+    <Bar
+      height={heightValue}
+      key={idx}
+      width={Math.floor(window.innerWidth / barHeights.length) / 2}
+    />
+  ))
+
+  return bars
+}
+
 const Home: React.FC = () => {
-  const [barHeights, setBarHeights] = useState([])
+  const [barHeights, setBarHeights] = useState<number[]>([])
   const [sortState, setSortState] = useState<SortingState>("Sort")
-  const [barLength, setBarLength] = useState(70)
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>("Selection")
+  const [barLength, setBarLength] = useState<number>(70)
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<SortingAlgorithms>(
+    "Selection"
+  )
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
   useEffect(resetBars, [barLength])
@@ -49,11 +63,8 @@ const Home: React.FC = () => {
 
   function triggerAnimation(): void {
     setSortState("Sorting")
-    startAnimation(
-      selectedAlgorithm as SortingAlgorithms,
-      barHeights,
-      sortingSpeedTable[sortingSpeed],
-      () => setSortState("Sorted")
+    startAnimation(selectedAlgorithm, barHeights, sortingSpeedTable[sortingSpeed], () =>
+      setSortState("Sorted")
     )
   }
 
@@ -70,7 +81,7 @@ const Home: React.FC = () => {
           <Spacer y={1} />
           <AlgorithmSelector
             disabled={sortState === "Sorting"}
-            onChangeHandler={setSelectedAlgorithm}
+            onChange={setSelectedAlgorithm}
             selectedAlgorithm={selectedAlgorithm}
           />
           <ArrayLengthModifier
@@ -93,13 +104,7 @@ const Home: React.FC = () => {
           <Footer />
         </div>
         <div className={styles.barsContainer}>
-          {barHeights.map((heightValue, idx) => (
-            <Bar
-              height={heightValue}
-              key={idx}
-              width={Math.floor(window.innerWidth / barLength) / 2}
-            />
-          ))}
+          {getBarElementsFromBarHeights(barHeights)}
         </div>
       </div>
     </>
