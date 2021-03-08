@@ -12,12 +12,12 @@ const activeSortingSpeedBtn: React.CSSProperties = {
 
 interface Props {
   sortingSpeed: keyof SortingSpeeds
-  sortState: SortingState
+  disabled: boolean
   onSpeedChange: (speed: keyof SortingSpeeds) => void
 }
 
 export const SpeedControl: React.FC<Props> = (props) => {
-  const { sortingSpeed, sortState, onSpeedChange } = props
+  const { sortingSpeed, disabled, onSpeedChange } = props
 
   const controlButtons = Object.keys<SortingSpeeds>(sortingSpeedTable).map((key, idx) => {
     return (
@@ -34,7 +34,7 @@ export const SpeedControl: React.FC<Props> = (props) => {
     <div className={styles.sideBarInputContainer}>
       <Text>Speed</Text>
       <Spacer y={-0.6} />
-      <ButtonGroup disabled={sortState === "Sorting"} ghost size="small" type="secondary">
+      <ButtonGroup disabled={disabled} ghost size="small" type="secondary">
         {controlButtons}
       </ButtonGroup>
     </div>

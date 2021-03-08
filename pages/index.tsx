@@ -32,11 +32,14 @@ const Home: React.FC = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>("Selection")
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
-  const resetBars = (): void => {
+  useEffect(resetBars, [barLength])
+  useEffect(resetBars, [selectedAlgorithm])
+
+  function resetBars(): void {
     const newBarHeights = generateBarHeights(barLength)
     setBarHeights(newBarHeights)
     setSortState("Sort")
-    window.requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       const barsDomEl = getAllBars()
       if (barsDomEl[5].style.backgroundColor === "rgb(17, 17, 17)") {
         changeBarsColor(barsDomEl, INACTIVE_BAR_COLOR)
@@ -44,8 +47,15 @@ const Home: React.FC = () => {
     })
   }
 
-  useEffect(resetBars, [barLength])
-  useEffect(resetBars, [selectedAlgorithm])
+  function triggerAnimation(): void {
+    setSortState("Sorting")
+    startAnimation(
+      selectedAlgorithm as SortingAlgorithms,
+      barHeights,
+      sortingSpeedTable[sortingSpeed],
+      () => setSortState("Sorted")
+    )
+  }
 
   return (
     <>
@@ -60,33 +70,22 @@ const Home: React.FC = () => {
           <Spacer y={1} />
           <AlgorithmSelector
             disabled={sortState === "Sorting"}
-            selectedAlgorithm={selectedAlgorithm}
             onChangeHandler={setSelectedAlgorithm}
+            selectedAlgorithm={selectedAlgorithm}
           />
           <ArrayLengthModifier
             disabled={sortState === "Sorting"}
-            value={barLength}
             onChange={(value) => setBarLength(value)}
+            value={barLength}
           />
           <Spacer y={0.5} />
           <SpeedControl
-            sortingSpeed={sortingSpeed}
-            sortState={sortState}
+            disabled={sortState === "Sorting"}
             onSpeedChange={(speed: keyof SortingSpeeds) => setSortingSpeed(speed)}
+            sortingSpeed={sortingSpeed}
           />
           <Spacer y={1.5} />
-          <SortButton
-            sortState={sortState}
-            clickAction={() => {
-              setSortState("Sorting")
-              startAnimation(
-                selectedAlgorithm as SortingAlgorithms,
-                barHeights,
-                sortingSpeedTable[sortingSpeed],
-                () => setSortState("Sorted")
-              )
-            }}
-          />
+          <SortButton onClick={triggerAnimation} sortState={sortState} />
           <Spacer y={0.6} />
           <ResetButton disabled={sortState === "Sorting"} onClick={resetBars} />
           <Spacer y={1.7} />
@@ -96,8 +95,8 @@ const Home: React.FC = () => {
         <div className={styles.barsContainer}>
           {barHeights.map((heightValue, idx) => (
             <Bar
-              key={idx}
               height={heightValue}
+              key={idx}
               width={Math.floor(window.innerWidth / barLength) / 2}
             />
           ))}

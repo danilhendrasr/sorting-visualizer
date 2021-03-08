@@ -5,11 +5,11 @@ import { SortingState } from "../types"
 
 interface SortButtonProps {
   sortState: SortingState
-  clickAction: () => void
+  onClick: () => void
 }
 
 export const SortButton: React.FC<SortButtonProps> = (props) => {
-  const { sortState, clickAction } = props
+  const { sortState, onClick: _onClick } = props
   const [text, setText] = useState<SortingState>("Sort")
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
   let isSorted = text === "Sorted"
   const onClick = () => {
     if (isSorted) return
-    clickAction()
+    _onClick()
   }
 
   return (
