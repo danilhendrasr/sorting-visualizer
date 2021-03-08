@@ -35,17 +35,17 @@ const getBarElementsFromBarHeights = (barHeights: number[]) => {
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState<number[]>([])
   const [sortingState, setSortingState] = useState<SortingState>("Sort")
-  const [barLength, setBarLength] = useState(70)
+  const [arrayLength, setArrayLength] = useState(70)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<SortingAlgorithms>(
     "Selection"
   )
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
-  useEffect(resetBars, [barLength])
+  useEffect(resetBars, [arrayLength])
   useEffect(resetBars, [selectedAlgorithm])
 
   function resetBars() {
-    const newBarHeights = generateBarHeights(barLength)
+    const newBarHeights = generateBarHeights(arrayLength)
     setBarHeights(newBarHeights)
     setSortingState("Sort")
     requestAnimationFrame(() => {
@@ -83,8 +83,8 @@ const Home: React.FC = () => {
               selectedAlgorithm={selectedAlgorithm}
             />
             <ArrayLengthModifier
-              onChange={(value) => setBarLength(value)}
-              value={barLength}
+              onChange={(value) => setArrayLength(value)}
+              value={arrayLength}
             />
             <Spacer y={0.5} />
             <SpeedControl
