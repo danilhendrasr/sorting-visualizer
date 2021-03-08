@@ -22,6 +22,7 @@ import homeStyles from "../styles/Home.module.scss"
 import { SpeedControl } from "../components/SpeedControl"
 import { LinkToRepo } from "../components/LinkToRepo"
 import { Footer } from "../components/Footer"
+import { ResetButton } from "../components/ResetButton"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -111,13 +112,7 @@ const Home: React.FC = () => {
             }}
           />
           <Spacer y={0.6} />
-          <Button
-            disabled={sortState === "Sorting"}
-            ghost
-            onClick={resetBars}
-            type="error">
-            Reset
-          </Button>
+          <ResetButton disabled={sortState === "Sorting"} onClick={resetBars} />
           <Spacer y={1.7} />
           <LinkToRepo />
           <Footer />
