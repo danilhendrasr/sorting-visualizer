@@ -1,47 +1,29 @@
-import React, { useEffect, useState } from "react"
-import { animateSelectionSort } from "../algorithms-helper/selection-sort"
-import { Bar } from "../components/Bar"
-import { SortButton } from "../components/SortButton"
-import { ArrayLengthModifier } from "../components/ArrayLengthModifier"
-import {
-  generateBarHeights,
-  changeBarsColor,
-  getAllBars,
-  sortingSpeedTable,
-} from "../utils/index"
-import { Spacer } from "@geist-ui/react"
-import { AlgorithmSelector } from "../components/AlgorithmSelector"
-import { INACTIVE_BAR_COLOR } from "../constants"
-import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
-import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
-import { default as Head } from "next/head"
-import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
 // @ts-ignore
 import styles from "../styles/Home.module.scss"
-import { SpeedControl } from "../components/SpeedControl"
-import { LinkToRepo } from "../components/LinkToRepo"
-import { Footer } from "../components/Footer"
-import { ResetButton } from "../components/ResetButton"
-import { AppTitle } from "../components/AppTitle"
 
-const startAnimation = (
-  sortingAlgorithm: SortingAlgorithms,
-  barHeights: number[],
-  sortingSpeed: number,
-  callback?: () => void
-): void => {
-  switch (sortingAlgorithm) {
-    case "Selection":
-      animateSelectionSort(barHeights, sortingSpeed, callback)
-      break
-    case "Insertion":
-      animateInsertionSort(barHeights, sortingSpeed, callback)
-      break
-    case "Bubble":
-      animateBubbleSort(barHeights, sortingSpeed, callback)
-      break
-  }
-}
+import React, { useEffect, useState } from "react"
+import {
+  changeBarsColor,
+  generateBarHeights,
+  getAllBars,
+  sortingSpeedTable,
+  startAnimation,
+} from "../utils"
+import {
+  AppTitle,
+  AlgorithmSelector,
+  ArrayLengthModifier,
+  Bar,
+  Footer,
+  LinkToRepo,
+  ResetButton,
+  SortButton,
+  SpeedControl,
+} from "../components"
+import { Spacer } from "@geist-ui/react"
+import { INACTIVE_BAR_COLOR } from "../constants"
+import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
+import { default as Head } from "next/head"
 
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState([])

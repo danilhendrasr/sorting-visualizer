@@ -1,5 +1,8 @@
+import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
+import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
+import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { ACTIVE_BAR_COLOR } from "../constants"
-import { ActiveBar, SortingSpeeds } from "../types"
+import { ActiveBar, SortingAlgorithms, SortingSpeeds } from "../types"
 
 export const generateARandomNumber = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -81,4 +84,23 @@ export const sortingSpeedTable: SortingSpeeds = {
   slow: 160,
   normal: 80,
   fast: 40,
+}
+
+export const startAnimation = (
+  sortingAlgorithm: SortingAlgorithms,
+  barHeights: number[],
+  sortingSpeed: number,
+  callback?: () => void
+): void => {
+  switch (sortingAlgorithm) {
+    case "Selection":
+      animateSelectionSort(barHeights, sortingSpeed, callback)
+      break
+    case "Insertion":
+      animateInsertionSort(barHeights, sortingSpeed, callback)
+      break
+    case "Bubble":
+      animateBubbleSort(barHeights, sortingSpeed, callback)
+      break
+  }
 }
