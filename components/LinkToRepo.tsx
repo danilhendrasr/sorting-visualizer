@@ -1,7 +1,7 @@
-import { Github } from "@geist-ui/react-icons"
-
 // @ts-ignore
 import styles from "../styles/Home.module.scss"
+
+import { Github } from "@geist-ui/react-icons"
 
 export const LinkToRepo: React.FC = (props) => {
   return (

@@ -1,14 +1,16 @@
 import { Button } from "@geist-ui/react"
+import { useControlsDisabled } from "../hooks"
 
 interface Props {
-  disabled: boolean
   onClick: () => void
 }
 
 export const ResetButton: React.FC<Props> = (props) => {
-  const { disabled, onClick } = props
+  const { onClick } = props
+  const isControlsDisabled = useControlsDisabled()
+
   return (
-    <Button disabled={disabled} ghost onClick={onClick} type="error">
+    <Button disabled={isControlsDisabled} ghost onClick={onClick} type="error">
       Reset
     </Button>
   )

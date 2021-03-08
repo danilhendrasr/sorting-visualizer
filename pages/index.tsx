@@ -24,6 +24,7 @@ import { Spacer } from "@geist-ui/react"
 import { INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { default as Head } from "next/head"
+import { AppStateContext } from "../contexts/app-state"
 
 const getBarElementsFromBarHeights = (barHeights: number[]): JSX.Element[] => {
   const bars = barHeights.map((heightValue, idx) => (
@@ -69,7 +70,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <>
+    <AppStateContext.Provider value={{ disableControlForms: sortState === "Sorting" }}>
       <Head>
         <title>Sorting Algorithms Visualizer</title>
       </Head>
@@ -80,25 +81,22 @@ const Home: React.FC = () => {
           <AppTitle />
           <Spacer y={1} />
           <AlgorithmSelector
-            disabled={sortState === "Sorting"}
             onChange={setSelectedAlgorithm}
             selectedAlgorithm={selectedAlgorithm}
           />
           <ArrayLengthModifier
-            disabled={sortState === "Sorting"}
             onChange={(value) => setBarLength(value)}
             value={barLength}
           />
           <Spacer y={0.5} />
           <SpeedControl
-            disabled={sortState === "Sorting"}
             onSpeedChange={(speed: keyof SortingSpeeds) => setSortingSpeed(speed)}
             sortingSpeed={sortingSpeed}
           />
           <Spacer y={1.5} />
           <SortButton onClick={triggerAnimation} sortState={sortState} />
           <Spacer y={0.6} />
-          <ResetButton disabled={sortState === "Sorting"} onClick={resetBars} />
+          <ResetButton onClick={resetBars} />
           <Spacer y={1.7} />
           <LinkToRepo />
           <Footer />
@@ -107,7 +105,7 @@ const Home: React.FC = () => {
           {getBarElementsFromBarHeights(barHeights)}
         </div>
       </div>
-    </>
+    </AppStateContext.Provider>
   )
 }
 

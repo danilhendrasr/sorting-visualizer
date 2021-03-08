@@ -1,9 +1,10 @@
-import { Text, Spacer, ButtonGroup, Button } from "@geist-ui/react"
-import { SortingSpeeds, SortingState } from "../types"
-
 // @ts-ignore
 import styles from "../styles/Home.module.scss"
+
+import { Text, Spacer, ButtonGroup, Button } from "@geist-ui/react"
+import { SortingSpeeds } from "../types"
 import { sortingSpeedTable } from "../utils"
+import { useControlsDisabled } from "../hooks"
 
 const activeSortingSpeedBtn: React.CSSProperties = {
   backgroundColor: "#000",
@@ -12,12 +13,12 @@ const activeSortingSpeedBtn: React.CSSProperties = {
 
 interface Props {
   sortingSpeed: keyof SortingSpeeds
-  disabled: boolean
   onSpeedChange: (speed: keyof SortingSpeeds) => void
 }
 
 export const SpeedControl: React.FC<Props> = (props) => {
-  const { sortingSpeed, disabled, onSpeedChange } = props
+  const { sortingSpeed, onSpeedChange } = props
+  const isControlsDisabled = useControlsDisabled()
 
   const controlButtons = Object.keys<SortingSpeeds>(sortingSpeedTable).map((key, idx) => {
     return (
@@ -34,7 +35,7 @@ export const SpeedControl: React.FC<Props> = (props) => {
     <div className={styles.sideBarInputContainer}>
       <Text>Speed</Text>
       <Spacer y={-0.6} />
-      <ButtonGroup disabled={disabled} ghost size="small" type="secondary">
+      <ButtonGroup disabled={isControlsDisabled} ghost size="small" type="secondary">
         {controlButtons}
       </ButtonGroup>
     </div>

@@ -1,22 +1,23 @@
-import { Text, Slider } from "@geist-ui/react"
-
 // @ts-ignore
 import styles from "../styles/Home.module.scss"
 
+import { Text, Slider } from "@geist-ui/react"
+import { useControlsDisabled } from "../hooks"
+
 interface Props {
-  disabled: boolean
   value: number
   onChange: (value: number) => void
 }
 
 export const ArrayLengthModifier: React.FC<Props> = (props): JSX.Element => {
-  const { disabled, value, onChange } = props
+  const { value, onChange } = props
+  const isControlsDisabled = useControlsDisabled()
 
   return (
     <div className={styles.sideBarInputContainer}>
       <Text>Length of array</Text>
       <Slider
-        disabled={disabled}
+        disabled={isControlsDisabled}
         max={100}
         min={10}
         onChange={onChange}
