@@ -2,13 +2,7 @@
 import styles from "../styles/Home.module.scss"
 
 import React, { useEffect, useState } from "react"
-import {
-  changeBarsColor,
-  generateBarHeights,
-  getAllBars,
-  sortingSpeedTable,
-  startAnimation,
-} from "../utils"
+import { changeBarsColor, generateBarHeights, getAllBars, startAnimation } from "../utils"
 import {
   AppTitle,
   AlgorithmSelector,
@@ -21,7 +15,7 @@ import {
   SpeedControl,
 } from "../components"
 import { Spacer } from "@geist-ui/react"
-import { INACTIVE_BAR_COLOR } from "../constants"
+import { INACTIVE_BAR_COLOR, sortingSpeedTable } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { default as Head } from "next/head"
 import { AppStateContext } from "../contexts/app-state"

@@ -80,12 +80,6 @@ export const getNumberFromHeightString = (height: string) => {
   return parseInt(unitlessHeight)
 }
 
-export const sortingSpeedTable: SortingSpeeds = {
-  slow: 160,
-  normal: 80,
-  fast: 40,
-}
-
 interface StartAnimationParams {
   barHeights: number[]
   sortingAlgorithm: SortingAlgorithms

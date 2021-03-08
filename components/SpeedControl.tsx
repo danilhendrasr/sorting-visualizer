@@ -3,8 +3,8 @@ import styles from "../styles/Home.module.scss"
 
 import { Text, Spacer, ButtonGroup, Button } from "@geist-ui/react"
 import { SortingSpeeds } from "../types"
-import { sortingSpeedTable } from "../utils"
 import { useControlsDisabled } from "../hooks"
+import { sortingSpeedTable } from "../constants"
 
 const activeSortingSpeedBtn: React.CSSProperties = {
   backgroundColor: "#000",
