@@ -4,8 +4,8 @@ import { Check, Play } from "@geist-ui/react-icons"
 import { SortingState } from "../types"
 
 interface SortButtonProps {
-  clickAction: () => void
   sortState: SortingState
+  clickAction: () => void
 }
 
 export const SortButton: React.FC<SortButtonProps> = (props) => {
@@ -25,10 +25,10 @@ export const SortButton: React.FC<SortButtonProps> = (props) => {
 
   return (
     <Button
-      style={text === "Sorted" ? { pointerEvents: "none" } : undefined}
       loading={isSorting}
       onClick={onClick}
       shadow={text === "Sort"}
+      style={text === "Sorted" ? { pointerEvents: "none" } : undefined}
       type="secondary">
       {text === "Sort" && <Play size={15} />}
       {isSorted && (

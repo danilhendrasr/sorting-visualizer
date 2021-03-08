@@ -29,9 +29,7 @@ const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState([])
   const [sortState, setSortState] = useState<SortingState>("Sort")
   const [barLength, setBarLength] = useState(70)
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string | string[]>(
-    "Selection"
-  )
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>("Selection")
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
   const resetBars = (): void => {

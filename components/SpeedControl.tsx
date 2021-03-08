@@ -10,19 +10,21 @@ const activeSortingSpeedBtn: React.CSSProperties = {
   color: "#fff",
 }
 
-export const SpeedControl: React.FC<{
+interface Props {
   sortingSpeed: keyof SortingSpeeds
   sortState: SortingState
   onSpeedChange: (speed: keyof SortingSpeeds) => void
-}> = (props) => {
+}
+
+export const SpeedControl: React.FC<Props> = (props) => {
   const { sortingSpeed, sortState, onSpeedChange } = props
 
   const controlButtons = Object.keys<SortingSpeeds>(sortingSpeedTable).map((key, idx) => {
     return (
       <Button
         key={idx}
-        style={sortingSpeed === key ? activeSortingSpeedBtn : undefined}
-        onClick={() => onSpeedChange(key)}>
+        onClick={() => onSpeedChange(key)}
+        style={sortingSpeed === key ? activeSortingSpeedBtn : undefined}>
         {key}
       </Button>
     )

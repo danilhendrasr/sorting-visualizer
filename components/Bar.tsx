@@ -1,9 +1,11 @@
 import { useTheme } from "@geist-ui/react"
 
-export const Bar: React.FC<{
+interface Props {
   height: number
   width: number
-}> = (props) => {
+}
+
+export const Bar: React.FC<Props> = (props) => {
   const { height, width } = props
 
   const { palette } = useTheme()
