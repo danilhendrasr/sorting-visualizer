@@ -1,11 +1,11 @@
 import { useTheme } from "@geist-ui/react"
 
-export const Bar: React.FC<{
+interface Props {
   height: number
   width: number
-}> = (props) => {
-  const { height, width } = props
+}
 
+export const Bar: React.FC<Props> = ({ height, width }) => {
   const { palette } = useTheme()
 
   const barStylings: React.CSSProperties = {

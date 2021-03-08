@@ -12,9 +12,9 @@ const insertionSort = (arrayToSort: number[]): InsertionAnimationSequence[] => {
   let sortedArray: number[] = []
 
   for (let i = 0; i < arrayToSort.length; i++) {
-    const currentItem: number = arrayToSort[i]
+    const currentItem = arrayToSort[i]
 
-    const isFirstIteration: boolean = i === 0
+    const isFirstIteration = i === 0
     if (isFirstIteration) {
       animaSeq.push({ idx: 0, moveFrom: i, shift: 0 })
       sortedArray.push(currentItem)
@@ -22,13 +22,13 @@ const insertionSort = (arrayToSort: number[]): InsertionAnimationSequence[] => {
     }
 
     for (let j = sortedArray.length - 1; j >= 0; j--) {
-      const isLastInneriteration: boolean = j === 0
+      const isLastInneriteration = j === 0
 
-      const leftSide: number = isLastInneriteration ? -Infinity : sortedArray[j - 1]
-      const rightSide: number = sortedArray[j]
+      const leftSide = isLastInneriteration ? -Infinity : sortedArray[j - 1]
+      const rightSide = sortedArray[j]
 
-      const isLeftSideLesser: boolean = leftSide <= currentItem
-      const isRightSideGreater: boolean = currentItem <= rightSide
+      const isLeftSideLesser = leftSide <= currentItem
+      const isRightSideGreater = currentItem <= rightSide
 
       if (isLeftSideLesser && isRightSideGreater) {
         const aboveRightSide = sortedArray.splice(j)
@@ -56,7 +56,7 @@ export const animateInsertionSort = (
   barHeights: number[],
   sortingSpeed: number,
   callback?: () => void
-): void => {
+) => {
   const animationSequence = insertionSort(barHeights)
   const bars = getAllBars()
 

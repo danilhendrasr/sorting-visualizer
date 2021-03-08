@@ -1,13 +1,16 @@
+import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
+import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
+import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { ACTIVE_BAR_COLOR } from "../constants"
-import { ActiveBar, SortingSpeeds } from "../types"
+import { ActiveBar, SortingAlgorithms, SortingSpeeds } from "../types"
 
-export const generateARandomNumber = (min: number, max: number): number => {
+export const generateARandomNumber = (min: number, max: number) => {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const generateBarHeights = (amountOfBar: number): number[] => {
+export const generateBarHeights = (amountOfBar: number) => {
   let newBarHeights: Set<number> = new Set<number>()
   while (newBarHeights.size < amountOfBar) {
     const randomHeight = generateARandomNumber(1, 100)
@@ -34,7 +37,7 @@ const isSingleHTMLElement = (
 export const changeBarsColor = (
   bar: HTMLElement | HTMLCollectionOf<HTMLElement> | HTMLElement[],
   endColor: string
-): void => {
+) => {
   if (!isSingleHTMLElement(bar)) {
     for (let i = 0; i < bar.length; i++) {
       bar[i].style.backgroundColor = endColor
@@ -44,14 +47,14 @@ export const changeBarsColor = (
   }
 }
 
-export const makeBarsActive = (bars: ActiveBar[]): void => {
+export const makeBarsActive = (bars: ActiveBar[]) => {
   for (const bar of bars) {
     changeBarsColor(bar.element, ACTIVE_BAR_COLOR)
     bar.element.style.height = `${bar.height}%`
   }
 }
 
-export const getAllBars = (): HTMLCollectionOf<HTMLElement> => {
+export const getAllBars = () => {
   const bars = document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
   return bars
 }
@@ -59,7 +62,7 @@ export const getAllBars = (): HTMLCollectionOf<HTMLElement> => {
 export const postSortAnimation = (
   bars: HTMLCollectionOf<HTMLElement>,
   endColor: string
-): void => {
+) => {
   for (let n = 0; n < bars.length; n++) {
     setTimeout(() => {
       let nThBar = bars[n]
@@ -68,7 +71,7 @@ export const postSortAnimation = (
   }
 }
 
-export const getNumberFromHeightString = (height: string): number => {
+export const getNumberFromHeightString = (height: string) => {
   const unitlessHeight = height.replace(
     /(cm|mm|in|px|pt|pc|em|rem|vw|vh|vmin|vmax|ex|ch|%)$/,
     ""
@@ -77,8 +80,25 @@ export const getNumberFromHeightString = (height: string): number => {
   return parseInt(unitlessHeight)
 }
 
-export const sortingSpeedTable: SortingSpeeds = {
-  slow: 160,
-  normal: 80,
-  fast: 40,
+interface StartAnimationParams {
+  barHeights: number[]
+  sortingAlgorithm: SortingAlgorithms
+  sortingSpeed: number
+  callback?: () => void
+}
+
+export const startAnimation = (params: StartAnimationParams) => {
+  const { barHeights, sortingAlgorithm, sortingSpeed, callback } = params
+
+  switch (sortingAlgorithm) {
+    case "Selection":
+      animateSelectionSort(barHeights, sortingSpeed, callback)
+      break
+    case "Insertion":
+      animateInsertionSort(barHeights, sortingSpeed, callback)
+      break
+    case "Bubble":
+      animateBubbleSort(barHeights, sortingSpeed, callback)
+      break
+  }
 }

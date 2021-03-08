@@ -1,35 +1,39 @@
-import { Select, Text, Spacer } from "@geist-ui/react"
-import { SortingAlgorithms } from "../types"
-
 // @ts-ignore
 import styles from "../styles/Home.module.scss"
 
-const algorithms: SortingAlgorithms[] = ["Selection", "Insertion", "Bubble"]
+import { Select, Text, Spacer } from "@geist-ui/react"
+import { SortingAlgorithms } from "../types"
+import { useControlsDisabled } from "../hooks"
+import { ALGORITHMS_LIST } from "../constants"
 
 interface Props {
-  disabled: boolean
-  selectedAlgorithm: string | string[]
-  onChangeHandler: (algorithm: string | string[]) => void
+  selectedAlgorithm: SortingAlgorithms
+  onChange: (algorithm: SortingAlgorithms) => void
 }
 
-export const AlgorithmSelector: React.FC<Props> = (props) => {
-  let { disabled, selectedAlgorithm, onChangeHandler } = props
-
-  const selectOptions = algorithms.map((algorithm, idx) => (
+const getSelectOptionsFromAlgorithmsList = (algorithmsList: SortingAlgorithms[]) => {
+  const selectOptions = algorithmsList.map((algorithm, idx) => (
     <Select.Option key={idx} value={algorithm}>
-      {`${algorithm} Sort`}
+      {`${algorithm} sort`}
     </Select.Option>
   ))
+
+  return selectOptions
+}
+
+export const AlgorithmSelector: React.FC<Props> = ({ selectedAlgorithm, onChange }) => {
+  const isControlsDisabled = useControlsDisabled()
+  const selectOptions = getSelectOptionsFromAlgorithmsList(ALGORITHMS_LIST)
 
   return (
     <div className={styles.sideBarInputContainer}>
       <Text>Select Algorithm</Text>
       <Spacer y={-0.4} />
       <Select
-        disabled={disabled}
-        value={selectedAlgorithm}
-        onChange={(algorithm) => onChangeHandler(algorithm)}
-        size="large">
+        disabled={isControlsDisabled}
+        onChange={(algorithm) => onChange(algorithm as SortingAlgorithms)}
+        size="large"
+        value={selectedAlgorithm}>
         {selectOptions}
       </Select>
     </div>

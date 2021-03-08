@@ -1,8 +1,8 @@
-import { INACTIVE_BAR_COLOR, ACTIVE_BAR_COLOR, SORTING_SPEED } from "../constants"
+import { INACTIVE_BAR_COLOR, ACTIVE_BAR_COLOR } from "../constants"
 import { ActiveBar } from "../types"
 import { changeBarsColor, getAllBars, makeBarsActive, postSortAnimation } from "../utils"
 
-const selectionSort = (inputArray: number[]): [number[][], [number, number][]] => {
+const selectionSort = (inputArray: number[]) => {
   let animationSequence: [number, number][] = []
   let unsortedArray = [...inputArray]
   let arrayState: number[][] = []
@@ -13,7 +13,7 @@ const selectionSort = (inputArray: number[]): [number[][], [number, number][]] =
     let currentMinIdx = x
 
     // These indexes will be stored as an item in the animation sequence array
-    let selectedBars: [number, number] = [currentMinIdx, currentMinIdx]
+    let selectedBars = [currentMinIdx, currentMinIdx] as [number, number]
 
     for (let y = x + 1; y < unsortedArray.length; y++) {
       let currentItem = unsortedArray[y]
@@ -48,7 +48,7 @@ export const animateSelectionSort = (
   barHeights: number[],
   sortingSpeed: number,
   callback?: () => void
-): void => {
+) => {
   const [arrayStates, animationSequence] = selectionSort(barHeights)
   const bars = getAllBars()
 
