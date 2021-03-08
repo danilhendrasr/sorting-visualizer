@@ -7,18 +7,18 @@ import {
   postSortAnimation,
 } from "../utils"
 
-const bubbleSort = (array: number[]): [number, number][] => {
+const bubbleSort = (array: number[]) => {
   let animaSeq: [number, number][] = []
-  let copyArray: number[] = [...array]
+  let copyArray = [...array]
 
-  let isSortingDone: boolean = false
+  let isSortingDone = false
   while (!isSortingDone) {
     for (let i = 0; i < copyArray.length - 1; i++) {
       const isInLastPosition = i === copyArray.length - 1
       if (isInLastPosition) break
 
-      const left: number = copyArray[i]
-      const right: number = copyArray[i + 1]
+      const left = copyArray[i]
+      const right = copyArray[i + 1]
 
       if (left > right) {
         const temp = right
@@ -28,10 +28,10 @@ const bubbleSort = (array: number[]): [number, number][] => {
       }
     }
 
-    let isArraySorted: boolean = true
+    let isArraySorted = true
     for (let j = 0; j < copyArray.length - 1; j++) {
-      const left: number = copyArray[j]
-      const right: number = copyArray[j + 1]
+      const left = copyArray[j]
+      const right = copyArray[j + 1]
 
       if (left > right) isArraySorted = false
     }
@@ -46,7 +46,7 @@ export const animateBubbleSort = (
   barHeights: number[],
   sortingSpeed: number,
   callback?: () => void
-): void => {
+) => {
   const animationSequence = bubbleSort(barHeights)
   const bars = getAllBars()
 

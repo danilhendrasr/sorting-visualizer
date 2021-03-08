@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { AppStateContext } from "../contexts/app-state"
 
-const useControlsDisabled = (): boolean => {
+const useControlsDisabled = () => {
   const sortingState = useContext(AppStateContext).sortingState
   const isControlsDisabled = sortingState === "Sorting"
   return isControlsDisabled

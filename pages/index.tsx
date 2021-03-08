@@ -26,7 +26,7 @@ import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { default as Head } from "next/head"
 import { AppStateContext } from "../contexts/app-state"
 
-const getBarElementsFromBarHeights = (barHeights: number[]): JSX.Element[] => {
+const getBarElementsFromBarHeights = (barHeights: number[]) => {
   const bars = barHeights.map((heightValue, idx) => (
     <Bar
       height={heightValue}
@@ -41,7 +41,7 @@ const getBarElementsFromBarHeights = (barHeights: number[]): JSX.Element[] => {
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState<number[]>([])
   const [sortState, setSortState] = useState<SortingState>("Sort")
-  const [barLength, setBarLength] = useState<number>(70)
+  const [barLength, setBarLength] = useState(70)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<SortingAlgorithms>(
     "Selection"
   )
@@ -50,7 +50,7 @@ const Home: React.FC = () => {
   useEffect(resetBars, [barLength])
   useEffect(resetBars, [selectedAlgorithm])
 
-  function resetBars(): void {
+  function resetBars() {
     const newBarHeights = generateBarHeights(barLength)
     setBarHeights(newBarHeights)
     setSortState("Sort")
@@ -62,7 +62,7 @@ const Home: React.FC = () => {
     })
   }
 
-  function triggerAnimation(): void {
+  function triggerAnimation() {
     setSortState("Sorting")
     startAnimation({
       sortingAlgorithm: selectedAlgorithm,
