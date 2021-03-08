@@ -1,5 +1,5 @@
-import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
-import { ActiveBar } from "../types"
+import { ACTIVE_BAR_COLOR } from "../constants"
+import { ActiveBar, SortingSpeeds } from "../types"
 
 export const generateARandomNumber = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -8,13 +8,12 @@ export const generateARandomNumber = (min: number, max: number): number => {
 }
 
 export const generateBarHeights = (amountOfBar: number): number[] => {
-  let newBarHeights: number[] = []
-  for (let i = 0; i < amountOfBar; i++) {
-    let randomHeight = generateARandomNumber(1, 101)
-    newBarHeights.push(randomHeight)
+  let newBarHeights: Set<number> = new Set<number>()
+  while (newBarHeights.size < amountOfBar) {
+    const randomHeight = generateARandomNumber(1, 100)
+    newBarHeights.add(randomHeight)
   }
-
-  return newBarHeights
+  return Array.from(newBarHeights)
 }
 
 const isSingleHTMLElement = (
@@ -76,4 +75,10 @@ export const getNumberFromHeightString = (height: string): number => {
   )
 
   return parseInt(unitlessHeight)
+}
+
+export const sortingSpeedTable: SortingSpeeds = {
+  slow: 160,
+  normal: 80,
+  fast: 40,
 }

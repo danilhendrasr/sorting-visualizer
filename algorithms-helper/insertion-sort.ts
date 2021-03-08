@@ -1,4 +1,4 @@
-import { INACTIVE_BAR_COLOR, SORTING_SPEED, ACTIVE_BAR_COLOR } from "../constants"
+import { INACTIVE_BAR_COLOR, ACTIVE_BAR_COLOR } from "../constants"
 import { getAllBars, changeBarsColor, makeBarsActive, postSortAnimation } from "../utils"
 
 interface InsertionAnimationSequence {
@@ -54,6 +54,7 @@ const insertionSort = (arrayToSort: number[]): InsertionAnimationSequence[] => {
 
 export const animateInsertionSort = (
   barHeights: number[],
+  sortingSpeed: number,
   callback?: () => void
 ): void => {
   const animationSequence = insertionSort(barHeights)
@@ -77,7 +78,7 @@ export const animateInsertionSort = (
 
       prevIdxBarHeights.push(bars[idxToInsertTo].style.height)
       makeBarsActive([{ element: bars[idxToInsertTo], height: barHeights[barToMove] }])
-    }, i * SORTING_SPEED)
+    }, i * sortingSpeed)
 
     for (let x = 1; x <= rightShift; x++) {
       setTimeout(() => {
@@ -90,7 +91,7 @@ export const animateInsertionSort = (
           postSortAnimation(bars, ACTIVE_BAR_COLOR)
           if (callback) callback()
         }
-      }, i * SORTING_SPEED)
+      }, i * sortingSpeed)
     }
   }
 }

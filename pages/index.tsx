@@ -1,31 +1,44 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { Bar } from "../components/Bar"
-import { ChartWrapper } from "../components/ChartWrapper"
 import { SortButton } from "../components/SortButton"
-import { generateBarHeights, changeBarsColor } from "../utils/index"
-import { Grid } from "@geist-ui/react"
+import { ArrayLengthModifier } from "../components/ArrayLengthModifier"
+import {
+  generateBarHeights,
+  changeBarsColor,
+  getAllBars,
+  sortingSpeedTable,
+} from "../utils/index"
+import { Spacer } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { INACTIVE_BAR_COLOR } from "../constants"
-import { SortingAlgorithms, SortingState } from "../types"
+import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { default as Head } from "next/head"
 import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
+// @ts-ignore
+import styles from "../styles/Home.module.scss"
+import { SpeedControl } from "../components/SpeedControl"
+import { LinkToRepo } from "../components/LinkToRepo"
+import { Footer } from "../components/Footer"
+import { ResetButton } from "../components/ResetButton"
+import { AppTitle } from "../components/AppTitle"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
   barHeights: number[],
+  sortingSpeed: number,
   callback?: () => void
 ): void => {
   switch (sortingAlgorithm) {
     case "Selection":
-      animateSelectionSort(barHeights, callback)
+      animateSelectionSort(barHeights, sortingSpeed, callback)
       break
     case "Insertion":
-      animateInsertionSort(barHeights, callback)
+      animateInsertionSort(barHeights, sortingSpeed, callback)
       break
     case "Bubble":
-      animateBubbleSort(barHeights, callback)
+      animateBubbleSort(barHeights, sortingSpeed, callback)
       break
   }
 }
@@ -33,31 +46,26 @@ const startAnimation = (
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState([])
   const [sortState, setSortState] = useState<SortingState>("Sort")
+  const [barLength, setBarLength] = useState(70)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string | string[]>(
     "Selection"
   )
+  const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
-  const barsEl = useRef<HTMLDivElement[]>([])
-
-  const bars = barHeights.map((heightValue, idx) => (
-    <Bar
-      key={idx}
-      height={heightValue}
-      elRef={(element) => (barsEl.current[idx] = element)}
-    />
-  ))
-
-  useEffect(() => {
-    const newBarHeights = generateBarHeights(100)
+  const resetBars = (): void => {
+    const newBarHeights = generateBarHeights(barLength)
     setBarHeights(newBarHeights)
     setSortState("Sort")
-
-    // requestAnimationFrame is used to defer the function execution after
-    // the browser has finished painting.
     window.requestAnimationFrame(() => {
-      changeBarsColor(barsEl.current, INACTIVE_BAR_COLOR)
+      const barsDomEl = getAllBars()
+      if (barsDomEl[5].style.backgroundColor === "rgb(17, 17, 17)") {
+        changeBarsColor(barsDomEl, INACTIVE_BAR_COLOR)
+      }
     })
-  }, [selectedAlgorithm])
+  }
+
+  useEffect(resetBars, [barLength])
+  useEffect(resetBars, [selectedAlgorithm])
 
   return (
     <>
@@ -65,29 +73,56 @@ const Home: React.FC = () => {
         <title>Sorting Algorithms Visualizer</title>
       </Head>
 
-      <Grid.Container justify="center" style={{ height: "100vh" }}>
-        <Grid xs={24} style={{ paddingTop: "40px" }}>
-          <ChartWrapper bars={bars} />
-        </Grid>
-        <Grid xs={24}>
-          <div>
-            <SortButton
-              sortState={sortState}
-              clickAction={() => {
-                setSortState("Sorting")
-                startAnimation(selectedAlgorithm as SortingAlgorithms, barHeights, () =>
-                  setSortState("Sorted")
-                )
-              }}
+      <div className={styles.container}>
+        <div className={styles.sidebarContainer}>
+          <Spacer y={1} />
+          <AppTitle />
+          <Spacer y={1} />
+          <AlgorithmSelector
+            disabled={sortState === "Sorting"}
+            selectedAlgorithm={selectedAlgorithm}
+            onChangeHandler={setSelectedAlgorithm}
+          />
+          <ArrayLengthModifier
+            disabled={sortState === "Sorting"}
+            value={barLength}
+            onChange={(value) => setBarLength(value)}
+          />
+          <Spacer y={0.5} />
+          <SpeedControl
+            sortingSpeed={sortingSpeed}
+            sortState={sortState}
+            onSpeedChange={(speed: keyof SortingSpeeds) => setSortingSpeed(speed)}
+          />
+          <Spacer y={1.5} />
+          <SortButton
+            sortState={sortState}
+            clickAction={() => {
+              setSortState("Sorting")
+              startAnimation(
+                selectedAlgorithm as SortingAlgorithms,
+                barHeights,
+                sortingSpeedTable[sortingSpeed],
+                () => setSortState("Sorted")
+              )
+            }}
+          />
+          <Spacer y={0.6} />
+          <ResetButton disabled={sortState === "Sorting"} onClick={resetBars} />
+          <Spacer y={1.7} />
+          <LinkToRepo />
+          <Footer />
+        </div>
+        <div className={styles.barsContainer}>
+          {barHeights.map((heightValue, idx) => (
+            <Bar
+              key={idx}
+              height={heightValue}
+              width={Math.floor(window.innerWidth / barLength) / 2}
             />
-            <AlgorithmSelector
-              disabled={sortState === "Sorting" ? true : false}
-              selectedAlgorithm={selectedAlgorithm}
-              onChangeHandler={setSelectedAlgorithm}
-            />
-          </div>
-        </Grid>
-      </Grid.Container>
+          ))}
+        </div>
+      </div>
     </>
   )
 }

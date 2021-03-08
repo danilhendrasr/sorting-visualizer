@@ -46,6 +46,7 @@ const selectionSort = (inputArray: number[]): [number[][], [number, number][]] =
 
 export const animateSelectionSort = (
   barHeights: number[],
+  sortingSpeed: number,
   callback?: () => void
 ): void => {
   const [arrayStates, animationSequence] = selectionSort(barHeights)
@@ -98,8 +99,8 @@ export const animateSelectionSort = (
           // to get executed.
           postSortAnimation(bars, ACTIVE_BAR_COLOR)
           if (callback) callback()
-        }, SORTING_SPEED)
+        }, sortingSpeed)
       }
-    }, i * SORTING_SPEED)
+    }, i * sortingSpeed)
   }
 }
