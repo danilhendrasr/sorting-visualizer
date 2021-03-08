@@ -1,15 +1,19 @@
 import { Select, Text, Spacer } from "@geist-ui/react"
 import { SortingAlgorithms } from "../types"
 
+// @ts-ignore
+import styles from "../styles/Home.module.scss"
+
 const algorithms: SortingAlgorithms[] = ["Selection", "Insertion", "Bubble"]
 
-export const AlgorithmSelector: React.FC<{
+interface Props {
   disabled: boolean
-  containerClass: string
   selectedAlgorithm: string | string[]
   onChangeHandler: (algorithm: string | string[]) => void
-}> = (props) => {
-  let { disabled, containerClass, selectedAlgorithm, onChangeHandler } = props
+}
+
+export const AlgorithmSelector: React.FC<Props> = (props) => {
+  let { disabled, selectedAlgorithm, onChangeHandler } = props
 
   const selectOptions = algorithms.map((algorithm, idx) => (
     <Select.Option key={idx} value={algorithm}>
@@ -18,7 +22,7 @@ export const AlgorithmSelector: React.FC<{
   ))
 
   return (
-    <div className={containerClass}>
+    <div className={styles.sideBarInputContainer}>
       <Text>Select Algorithm</Text>
       <Spacer y={-0.4} />
       <Select

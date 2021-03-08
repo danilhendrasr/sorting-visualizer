@@ -1,17 +1,19 @@
 import { Text, Slider } from "@geist-ui/react"
 
+// @ts-ignore
+import styles from "../styles/Home.module.scss"
+
 interface Props {
-  containerClass: string
   disabled: boolean
   value: number
   onChange: (value: number) => void
 }
 
 export const ArrayLengthModifier: React.FC<Props> = (props): JSX.Element => {
-  const { containerClass, disabled, value, onChange } = props
+  const { disabled, value, onChange } = props
 
   return (
-    <div className={containerClass}>
+    <div className={styles.sideBarInputContainer}>
       <Text>Length of array</Text>
       <Slider
         disabled={disabled}

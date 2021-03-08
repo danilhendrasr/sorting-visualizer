@@ -9,16 +9,15 @@ import {
   getAllBars,
   sortingSpeedTable,
 } from "../utils/index"
-import { Button, ButtonGroup, Slider, Spacer, Text } from "@geist-ui/react"
+import { Spacer } from "@geist-ui/react"
 import { AlgorithmSelector } from "../components/AlgorithmSelector"
 import { INACTIVE_BAR_COLOR } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { default as Head } from "next/head"
 import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
-import { Github } from "@geist-ui/react-icons"
 // @ts-ignore
-import homeStyles from "../styles/Home.module.scss"
+import styles from "../styles/Home.module.scss"
 import { SpeedControl } from "../components/SpeedControl"
 import { LinkToRepo } from "../components/LinkToRepo"
 import { Footer } from "../components/Footer"
@@ -74,19 +73,17 @@ const Home: React.FC = () => {
         <title>Sorting Algorithms Visualizer</title>
       </Head>
 
-      <div className={homeStyles.container}>
-        <div className={homeStyles.sidebarContainer}>
+      <div className={styles.container}>
+        <div className={styles.sidebarContainer}>
           <Spacer y={1} />
           <AppTitle />
           <Spacer y={1} />
           <AlgorithmSelector
-            containerClass={homeStyles.sideBarInputContainer}
             disabled={sortState === "Sorting"}
             selectedAlgorithm={selectedAlgorithm}
             onChangeHandler={setSelectedAlgorithm}
           />
           <ArrayLengthModifier
-            containerClass={homeStyles.sideBarInputContainer}
             disabled={sortState === "Sorting"}
             value={barLength}
             onChange={(value) => setBarLength(value)}
@@ -116,7 +113,7 @@ const Home: React.FC = () => {
           <LinkToRepo />
           <Footer />
         </div>
-        <div className={homeStyles.barsContainer}>
+        <div className={styles.barsContainer}>
           {barHeights.map((heightValue, idx) => (
             <Bar
               key={idx}
