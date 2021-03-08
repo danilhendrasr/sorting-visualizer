@@ -4,23 +4,29 @@ import styles from "../styles/Home.module.scss"
 import { Select, Text, Spacer } from "@geist-ui/react"
 import { SortingAlgorithms } from "../types"
 import { useControlsDisabled } from "../hooks"
-
-const algorithms: SortingAlgorithms[] = ["Selection", "Insertion", "Bubble"]
+import { ALGORITHMS_LIST } from "../constants"
 
 interface Props {
   selectedAlgorithm: SortingAlgorithms
   onChange: (algorithm: SortingAlgorithms) => void
 }
 
+const getSelectOptionsFromAlgorithmsList = (
+  algorithmsList: SortingAlgorithms[]
+): JSX.Element[] => {
+  const selectOptions = algorithmsList.map((algorithm, idx) => (
+    <Select.Option key={idx} value={algorithm}>
+      {`${algorithm} sort`}
+    </Select.Option>
+  ))
+
+  return selectOptions
+}
+
 export const AlgorithmSelector: React.FC<Props> = (props) => {
   let { selectedAlgorithm, onChange } = props
   const isControlsDisabled = useControlsDisabled()
-
-  const selectOptions = algorithms.map((algorithm, idx) => (
-    <Select.Option key={idx} value={algorithm}>
-      {`${algorithm} Sort`}
-    </Select.Option>
-  ))
+  const selectOptions = getSelectOptionsFromAlgorithmsList(ALGORITHMS_LIST)
 
   return (
     <div className={styles.sideBarInputContainer}>
