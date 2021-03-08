@@ -86,12 +86,16 @@ export const sortingSpeedTable: SortingSpeeds = {
   fast: 40,
 }
 
-export const startAnimation = (
-  sortingAlgorithm: SortingAlgorithms,
-  barHeights: number[],
-  sortingSpeed: number,
+interface StartAnimationParams {
+  barHeights: number[]
+  sortingAlgorithm: SortingAlgorithms
+  sortingSpeed: number
   callback?: () => void
-): void => {
+}
+
+export const startAnimation = (params: StartAnimationParams): void => {
+  const { barHeights, sortingAlgorithm, sortingSpeed, callback } = params
+
   switch (sortingAlgorithm) {
     case "Selection":
       animateSelectionSort(barHeights, sortingSpeed, callback)

@@ -64,9 +64,12 @@ const Home: React.FC = () => {
 
   function triggerAnimation(): void {
     setSortState("Sorting")
-    startAnimation(selectedAlgorithm, barHeights, sortingSpeedTable[sortingSpeed], () =>
-      setSortState("Sorted")
-    )
+    startAnimation({
+      sortingAlgorithm: selectedAlgorithm,
+      barHeights,
+      sortingSpeed: sortingSpeedTable[sortingSpeed],
+      callback: () => setSortState("Sorted"),
+    })
   }
 
   return (
