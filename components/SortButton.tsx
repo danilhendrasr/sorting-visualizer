@@ -1,43 +1,30 @@
-import { useEffect, useState } from "react"
+import { useContext } from "react"
 import { Button, Spacer } from "@geist-ui/react"
 import { Check, Play } from "@geist-ui/react-icons"
-import { SortingState } from "../types"
+import { AppStateContext } from "../contexts/app-state"
 
-interface SortButtonProps {
-  sortState: SortingState
+interface Props {
   onClick: () => void
 }
 
-export const SortButton: React.FC<SortButtonProps> = (props) => {
-  const { sortState, onClick: _onClick } = props
-  const [text, setText] = useState<SortingState>("Sort")
+export const SortButton: React.FC<Props> = ({ onClick }) => {
+  const sortingState = useContext(AppStateContext).sortingState
 
-  useEffect(() => {
-    if (sortState !== text) setText(sortState)
-  }, [sortState])
-
-  let isSorting = text === "Sorting"
-  let isSorted = text === "Sorted"
-  const onClick = () => {
-    if (isSorted) return
-    _onClick()
-  }
+  const isIdle = sortingState === "Sort"
+  const isSorting = sortingState === "Sorting"
+  const isSorted = sortingState === "Sorted"
 
   return (
     <Button
       loading={isSorting}
       onClick={onClick}
-      shadow={text === "Sort"}
-      style={text === "Sorted" ? { pointerEvents: "none" } : undefined}
+      shadow={isIdle}
+      style={isSorted ? { pointerEvents: "none" } : undefined}
       type="secondary">
-      {text === "Sort" && <Play size={15} />}
-      {isSorted && (
-        <>
-          <Check size={20} />
-        </>
-      )}
+      {isIdle && <Play size={15} />}
+      {isSorted && <Check size={20} />}
       <Spacer inline x={0.2} />
-      {text}
+      {sortingState}
     </Button>
   )
 }

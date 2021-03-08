@@ -1,7 +1,8 @@
 import { createContext } from "react"
+import { SortingState } from "../types"
 
 interface AppStateCtx {
-  disableControlForms: boolean
+  sortingState: SortingState
 }
 
 export const AppStateContext = createContext<AppStateCtx>(undefined)

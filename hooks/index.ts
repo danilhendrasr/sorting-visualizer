@@ -1,9 +1,10 @@
 import { useContext } from "react"
 import { AppStateContext } from "../contexts/app-state"
 
-const useControlsDisabled = () => {
-  const isDisabled = useContext(AppStateContext).disableControlForms
-  return isDisabled
+const useControlsDisabled = (): boolean => {
+  const sortingState = useContext(AppStateContext).sortingState
+  const isControlsDisabled = sortingState === "Sorting"
+  return isControlsDisabled
 }
 
 export { useControlsDisabled }

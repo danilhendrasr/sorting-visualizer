@@ -70,42 +70,44 @@ const Home: React.FC = () => {
   }
 
   return (
-    <AppStateContext.Provider value={{ disableControlForms: sortState === "Sorting" }}>
+    <>
       <Head>
         <title>Sorting Algorithms Visualizer</title>
       </Head>
 
       <div className={styles.container}>
-        <div className={styles.sidebarContainer}>
-          <Spacer y={1} />
-          <AppTitle />
-          <Spacer y={1} />
-          <AlgorithmSelector
-            onChange={setSelectedAlgorithm}
-            selectedAlgorithm={selectedAlgorithm}
-          />
-          <ArrayLengthModifier
-            onChange={(value) => setBarLength(value)}
-            value={barLength}
-          />
-          <Spacer y={0.5} />
-          <SpeedControl
-            onSpeedChange={(speed: keyof SortingSpeeds) => setSortingSpeed(speed)}
-            sortingSpeed={sortingSpeed}
-          />
-          <Spacer y={1.5} />
-          <SortButton onClick={triggerAnimation} sortState={sortState} />
-          <Spacer y={0.6} />
-          <ResetButton onClick={resetBars} />
-          <Spacer y={1.7} />
-          <LinkToRepo />
-          <Footer />
-        </div>
+        <AppStateContext.Provider value={{ sortingState: sortState }}>
+          <div className={styles.sidebarContainer}>
+            <Spacer y={1} />
+            <AppTitle />
+            <Spacer y={1} />
+            <AlgorithmSelector
+              onChange={setSelectedAlgorithm}
+              selectedAlgorithm={selectedAlgorithm}
+            />
+            <ArrayLengthModifier
+              onChange={(value) => setBarLength(value)}
+              value={barLength}
+            />
+            <Spacer y={0.5} />
+            <SpeedControl
+              onSpeedChange={(speed: keyof SortingSpeeds) => setSortingSpeed(speed)}
+              sortingSpeed={sortingSpeed}
+            />
+            <Spacer y={1.5} />
+            <SortButton onClick={triggerAnimation} />
+            <Spacer y={0.6} />
+            <ResetButton onClick={resetBars} />
+            <Spacer y={1.7} />
+            <LinkToRepo />
+            <Footer />
+          </div>
+        </AppStateContext.Provider>
         <div className={styles.barsContainer}>
           {getBarElementsFromBarHeights(barHeights)}
         </div>
       </div>
-    </AppStateContext.Provider>
+    </>
   )
 }
 
