@@ -23,6 +23,7 @@ import { SpeedControl } from "../components/SpeedControl"
 import { LinkToRepo } from "../components/LinkToRepo"
 import { Footer } from "../components/Footer"
 import { ResetButton } from "../components/ResetButton"
+import { AppTitle } from "../components/AppTitle"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -76,9 +77,7 @@ const Home: React.FC = () => {
       <div className={homeStyles.container}>
         <div className={homeStyles.sidebarContainer}>
           <Spacer y={1} />
-          <Text h1 size="2em" className={homeStyles.textCenter}>
-            Sorting Algorithms Visualizer
-          </Text>
+          <AppTitle />
           <Spacer y={1} />
           <AlgorithmSelector
             containerClass={homeStyles.sideBarInputContainer}
