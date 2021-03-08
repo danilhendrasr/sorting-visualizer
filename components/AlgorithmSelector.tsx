@@ -11,9 +11,7 @@ interface Props {
   onChange: (algorithm: SortingAlgorithms) => void
 }
 
-const getSelectOptionsFromAlgorithmsList = (
-  algorithmsList: SortingAlgorithms[]
-): JSX.Element[] => {
+const getSelectOptionsFromAlgorithmsList = (algorithmsList: SortingAlgorithms[]) => {
   const selectOptions = algorithmsList.map((algorithm, idx) => (
     <Select.Option key={idx} value={algorithm}>
       {`${algorithm} sort`}
@@ -23,8 +21,7 @@ const getSelectOptionsFromAlgorithmsList = (
   return selectOptions
 }
 
-export const AlgorithmSelector: React.FC<Props> = (props) => {
-  let { selectedAlgorithm, onChange } = props
+export const AlgorithmSelector: React.FC<Props> = ({ selectedAlgorithm, onChange }) => {
   const isControlsDisabled = useControlsDisabled()
   const selectOptions = getSelectOptionsFromAlgorithmsList(ALGORITHMS_LIST)
 

@@ -9,8 +9,7 @@ interface Props {
   onChange: (value: number) => void
 }
 
-export const ArrayLengthModifier: React.FC<Props> = (props): JSX.Element => {
-  const { value, onChange } = props
+export const ArrayLengthModifier: React.FC<Props> = ({ value, onChange }) => {
   const isControlsDisabled = useControlsDisabled()
 
   return (

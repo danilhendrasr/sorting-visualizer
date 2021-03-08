@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.scss"
 
 import { Github } from "@geist-ui/react-icons"
 
-export const LinkToRepo: React.FC = (props) => {
+export const LinkToRepo: React.FC = () => {
   return (
     <a
       className={styles.githubIconWrapper}

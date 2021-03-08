@@ -5,9 +5,7 @@ interface Props {
   width: number
 }
 
-export const Bar: React.FC<Props> = (props) => {
-  const { height, width } = props
-
+export const Bar: React.FC<Props> = ({ height, width }) => {
   const { palette } = useTheme()
 
   const barStylings: React.CSSProperties = {

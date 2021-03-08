@@ -5,8 +5,7 @@ interface Props {
   onClick: () => void
 }
 
-export const ResetButton: React.FC<Props> = (props) => {
-  const { onClick } = props
+export const ResetButton: React.FC<Props> = ({ onClick }) => {
   const isControlsDisabled = useControlsDisabled()
 
   return (

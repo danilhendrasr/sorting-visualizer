@@ -16,8 +16,7 @@ interface Props {
   onSpeedChange: (speed: keyof SortingSpeeds) => void
 }
 
-export const SpeedControl: React.FC<Props> = (props) => {
-  const { sortingSpeed, onSpeedChange } = props
+export const SpeedControl: React.FC<Props> = ({ sortingSpeed, onSpeedChange }) => {
   const isControlsDisabled = useControlsDisabled()
 
   const controlButtons = Object.keys<SortingSpeeds>(sortingSpeedTable).map((key, idx) => {
