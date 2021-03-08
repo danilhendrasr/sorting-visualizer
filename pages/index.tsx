@@ -34,7 +34,7 @@ const getBarElementsFromBarHeights = (barHeights: number[]) => {
 
 const Home: React.FC = () => {
   const [barHeights, setBarHeights] = useState<number[]>([])
-  const [sortState, setSortState] = useState<SortingState>("Sort")
+  const [sortingState, setSortingState] = useState<SortingState>("Sort")
   const [barLength, setBarLength] = useState(70)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<SortingAlgorithms>(
     "Selection"
@@ -47,7 +47,7 @@ const Home: React.FC = () => {
   function resetBars() {
     const newBarHeights = generateBarHeights(barLength)
     setBarHeights(newBarHeights)
-    setSortState("Sort")
+    setSortingState("Sort")
     requestAnimationFrame(() => {
       const barsDomEl = getAllBars()
       if (barsDomEl[5].style.backgroundColor === "rgb(17, 17, 17)") {
@@ -57,12 +57,12 @@ const Home: React.FC = () => {
   }
 
   function triggerAnimation() {
-    setSortState("Sorting")
+    setSortingState("Sorting")
     startAnimation({
       sortingAlgorithm: selectedAlgorithm,
       barHeights,
       sortingSpeed: sortingSpeedTable[sortingSpeed],
-      callback: () => setSortState("Sorted"),
+      callback: () => setSortingState("Sorted"),
     })
   }
 
@@ -73,7 +73,7 @@ const Home: React.FC = () => {
       </Head>
 
       <div className={styles.container}>
-        <AppStateContext.Provider value={{ sortingState: sortState }}>
+        <AppStateContext.Provider value={{ sortingState }}>
           <div className={styles.sidebarContainer}>
             <Spacer y={1} />
             <AppTitle />
