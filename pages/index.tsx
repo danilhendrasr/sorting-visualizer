@@ -21,6 +21,7 @@ import { Github } from "@geist-ui/react-icons"
 import homeStyles from "../styles/Home.module.scss"
 import { SpeedControl } from "../components/SpeedControl"
 import { LinkToRepo } from "../components/LinkToRepo"
+import { Footer } from "../components/Footer"
 
 const startAnimation = (
   sortingAlgorithm: SortingAlgorithms,
@@ -119,9 +120,7 @@ const Home: React.FC = () => {
           </Button>
           <Spacer y={1.7} />
           <LinkToRepo />
-          <Text size=".7em">
-            &copy; {new Date().getFullYear()} - Danil Hendra Suryawan
-          </Text>
+          <Footer />
         </div>
         <div className={homeStyles.barsContainer}>
           {barHeights.map((heightValue, idx) => (
