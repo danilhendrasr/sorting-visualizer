@@ -2,7 +2,13 @@
 import styles from "../styles/Home.module.scss"
 
 import React, { useEffect, useState } from "react"
-import { changeBarsColor, generateBarHeights, getAllBars, startAnimation } from "../utils"
+import {
+  changeBarsColor,
+  generateBarHeights,
+  getAllBars,
+  hexToRgb,
+  startAnimation,
+} from "../utils"
 import {
   AppTitle,
   AlgorithmSelector,
@@ -56,7 +62,8 @@ const Home: React.FC = () => {
     setSortingState("Sort")
     requestAnimationFrame(() => {
       const barsDomEl = getAllBars()
-      if (barsDomEl[5].style.backgroundColor === "rgb(0, 0, 0)") {
+      const sampleBg = barsDomEl[5].style.backgroundColor
+      if (sampleBg === hexToRgb(palette.active)) {
         changeBarsColor(barsDomEl, palette.inactive)
       }
     })
