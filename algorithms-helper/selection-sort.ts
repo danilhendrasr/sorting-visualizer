@@ -1,5 +1,4 @@
-import { INACTIVE_BAR_COLOR, ACTIVE_BAR_COLOR } from "../constants"
-import { ActiveBar } from "../types"
+import { ActiveBar, AnimateFunctionParams } from "../types"
 import { changeBarsColor, getAllBars, makeBarsActive, postSortAnimation } from "../utils"
 
 const selectionSort = (inputArray: number[]) => {
@@ -44,11 +43,8 @@ const selectionSort = (inputArray: number[]) => {
   return [arrayState, animationSequence]
 }
 
-export const animateSelectionSort = (
-  barHeights: number[],
-  sortingSpeed: number,
-  callback?: () => void
-) => {
+export const animateSelectionSort = (params: AnimateFunctionParams) => {
+  const { barHeights, palette, sortingSpeed, callback } = params
   const [arrayStates, animationSequence] = selectionSort(barHeights)
   const bars = getAllBars()
 
@@ -81,23 +77,23 @@ export const animateSelectionSort = (
         let prevAnimationSequence = animationSequence[i - 1]
         let [prevBar1Idx, prevBar2Idx] = prevAnimationSequence
         let previousActiveBars = [bars[prevBar1Idx], bars[prevBar2Idx]]
-        changeBarsColor(previousActiveBars, INACTIVE_BAR_COLOR)
+        changeBarsColor(previousActiveBars, palette.inactive)
       }
 
-      makeBarsActive(barsToActiveBars)
+      makeBarsActive(barsToActiveBars, palette.active)
 
       if (lastIteration) {
         // Revert the last bar to an inactive bar
         setTimeout(() => {
           let lastBar = activeBar1
-          changeBarsColor(lastBar, INACTIVE_BAR_COLOR)
+          changeBarsColor(lastBar, palette.inactive)
 
           // Because this animate function executes asynchronous function (setTimeout)
           // if we wanted to do something right after this function is done running,
           // we have to put the code inside the last setTimeout.
           // Otherwise, the code will get executed without waiting for the setTimeouts
           // to get executed.
-          postSortAnimation(bars, ACTIVE_BAR_COLOR)
+          postSortAnimation(bars, palette.active)
           if (callback) callback()
         }, sortingSpeed)
       }

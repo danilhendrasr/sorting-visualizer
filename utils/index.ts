@@ -1,8 +1,7 @@
 import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { animateSelectionSort } from "../algorithms-helper/selection-sort"
-import { ACTIVE_BAR_COLOR } from "../constants"
-import { ActiveBar, SortingAlgorithms, SortingSpeeds } from "../types"
+import { ActiveBar, SortingAlgorithms } from "../types"
 
 export const generateARandomNumber = (min: number, max: number) => {
   min = Math.ceil(min)
@@ -47,9 +46,9 @@ export const changeBarsColor = (
   }
 }
 
-export const makeBarsActive = (bars: ActiveBar[]) => {
+export const makeBarsActive = (bars: ActiveBar[], activeBarColor: string) => {
   for (const bar of bars) {
-    changeBarsColor(bar.element, ACTIVE_BAR_COLOR)
+    changeBarsColor(bar.element, activeBarColor)
     bar.element.style.height = `${bar.height}%`
   }
 }
@@ -82,23 +81,46 @@ export const getNumberFromHeightString = (height: string) => {
 
 interface StartAnimationParams {
   barHeights: number[]
+  palette: { active: string; inactive: string }
   sortingAlgorithm: SortingAlgorithms
   sortingSpeed: number
   callback?: () => void
 }
 
 export const startAnimation = (params: StartAnimationParams) => {
-  const { barHeights, sortingAlgorithm, sortingSpeed, callback } = params
+  const { barHeights, palette, sortingAlgorithm, sortingSpeed, callback } = params
+  const animationParams = {
+    barHeights,
+    palette,
+    sortingSpeed,
+    callback,
+  }
 
   switch (sortingAlgorithm) {
     case "Selection":
-      animateSelectionSort(barHeights, sortingSpeed, callback)
+      animateSelectionSort(animationParams)
       break
     case "Insertion":
-      animateInsertionSort(barHeights, sortingSpeed, callback)
+      animateInsertionSort(animationParams)
       break
     case "Bubble":
-      animateBubbleSort(barHeights, sortingSpeed, callback)
+      animateBubbleSort(animationParams)
       break
   }
+}
+
+export const hexToRgb = (hex: string) => {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+  hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+    return r + r + g + g + b + b
+  })
+
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  const rgb = {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  }
+
+  return result ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : null
 }

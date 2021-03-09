@@ -2,7 +2,13 @@
 import styles from "../styles/Home.module.scss"
 
 import React, { useEffect, useState } from "react"
-import { changeBarsColor, generateBarHeights, getAllBars, startAnimation } from "../utils"
+import {
+  changeBarsColor,
+  generateBarHeights,
+  getAllBars,
+  hexToRgb,
+  startAnimation,
+} from "../utils"
 import {
   AppTitle,
   AlgorithmSelector,
@@ -14,8 +20,8 @@ import {
   SortButton,
   SpeedControl,
 } from "../components"
-import { Spacer } from "@geist-ui/react"
-import { INACTIVE_BAR_COLOR, sortingSpeedTable } from "../constants"
+import { Spacer, useTheme } from "@geist-ui/react"
+import { sortingSpeedTable } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { default as Head } from "next/head"
 import { AppStateContext } from "../contexts/app-state"
@@ -33,36 +39,44 @@ const getBarElementsFromBarHeights = (barHeights: number[]) => {
 }
 
 const Home: React.FC = () => {
+  const { palette: geistUIPalette } = useTheme()
+  const palette = {
+    active: geistUIPalette.foreground,
+    inactive: geistUIPalette.errorLight,
+  }
+
   const [barHeights, setBarHeights] = useState<number[]>([])
-  const [sortState, setSortState] = useState<SortingState>("Sort")
-  const [barLength, setBarLength] = useState(70)
+  const [sortingState, setSortingState] = useState<SortingState>("Sort")
+  const [arrayLength, setArrayLength] = useState(70)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<SortingAlgorithms>(
     "Selection"
   )
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
 
-  useEffect(resetBars, [barLength])
+  useEffect(resetBars, [arrayLength])
   useEffect(resetBars, [selectedAlgorithm])
 
   function resetBars() {
-    const newBarHeights = generateBarHeights(barLength)
+    const newBarHeights = generateBarHeights(arrayLength)
     setBarHeights(newBarHeights)
-    setSortState("Sort")
+    setSortingState("Sort")
     requestAnimationFrame(() => {
       const barsDomEl = getAllBars()
-      if (barsDomEl[5].style.backgroundColor === "rgb(17, 17, 17)") {
-        changeBarsColor(barsDomEl, INACTIVE_BAR_COLOR)
+      const sampleBg = barsDomEl[5].style.backgroundColor
+      if (sampleBg === hexToRgb(palette.active)) {
+        changeBarsColor(barsDomEl, palette.inactive)
       }
     })
   }
 
   function triggerAnimation() {
-    setSortState("Sorting")
+    setSortingState("Sorting")
     startAnimation({
-      sortingAlgorithm: selectedAlgorithm,
       barHeights,
+      palette,
+      sortingAlgorithm: selectedAlgorithm,
       sortingSpeed: sortingSpeedTable[sortingSpeed],
-      callback: () => setSortState("Sorted"),
+      callback: () => setSortingState("Sorted"),
     })
   }
 
@@ -73,7 +87,7 @@ const Home: React.FC = () => {
       </Head>
 
       <div className={styles.container}>
-        <AppStateContext.Provider value={{ sortingState: sortState }}>
+        <AppStateContext.Provider value={{ sortingState }}>
           <div className={styles.sidebarContainer}>
             <Spacer y={1} />
             <AppTitle />
@@ -83,8 +97,8 @@ const Home: React.FC = () => {
               selectedAlgorithm={selectedAlgorithm}
             />
             <ArrayLengthModifier
-              onChange={(value) => setBarLength(value)}
-              value={barLength}
+              onChange={(value) => setArrayLength(value)}
+              value={arrayLength}
             />
             <Spacer y={0.5} />
             <SpeedControl
