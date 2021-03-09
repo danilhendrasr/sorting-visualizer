@@ -14,8 +14,8 @@ import {
   SortButton,
   SpeedControl,
 } from "../components"
-import { Spacer } from "@geist-ui/react"
-import { INACTIVE_BAR_COLOR, sortingSpeedTable } from "../constants"
+import { Spacer, useTheme } from "@geist-ui/react"
+import { sortingSpeedTable } from "../constants"
 import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { default as Head } from "next/head"
 import { AppStateContext } from "../contexts/app-state"
@@ -33,6 +33,12 @@ const getBarElementsFromBarHeights = (barHeights: number[]) => {
 }
 
 const Home: React.FC = () => {
+  const { palette: geistUIPalette } = useTheme()
+  const palette = {
+    active: geistUIPalette.foreground,
+    inactive: geistUIPalette.errorLight,
+  }
+
   const [barHeights, setBarHeights] = useState<number[]>([])
   const [sortingState, setSortingState] = useState<SortingState>("Sort")
   const [arrayLength, setArrayLength] = useState(70)
@@ -50,8 +56,8 @@ const Home: React.FC = () => {
     setSortingState("Sort")
     requestAnimationFrame(() => {
       const barsDomEl = getAllBars()
-      if (barsDomEl[5].style.backgroundColor === "rgb(17, 17, 17)") {
-        changeBarsColor(barsDomEl, INACTIVE_BAR_COLOR)
+      if (barsDomEl[5].style.backgroundColor === "rgb(0, 0, 0)") {
+        changeBarsColor(barsDomEl, palette.inactive)
       }
     })
   }
@@ -59,8 +65,9 @@ const Home: React.FC = () => {
   function triggerAnimation() {
     setSortingState("Sorting")
     startAnimation({
-      sortingAlgorithm: selectedAlgorithm,
       barHeights,
+      palette,
+      sortingAlgorithm: selectedAlgorithm,
       sortingSpeed: sortingSpeedTable[sortingSpeed],
       callback: () => setSortingState("Sorted"),
     })

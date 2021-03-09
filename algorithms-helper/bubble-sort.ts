@@ -1,4 +1,4 @@
-import { ACTIVE_BAR_COLOR, INACTIVE_BAR_COLOR } from "../constants"
+import { AnimateFunctionParams } from "../types"
 import {
   changeBarsColor,
   getAllBars,
@@ -42,11 +42,8 @@ const bubbleSort = (array: number[]) => {
   return animaSeq
 }
 
-export const animateBubbleSort = (
-  barHeights: number[],
-  sortingSpeed: number,
-  callback?: () => void
-) => {
+export const animateBubbleSort = (params: AnimateFunctionParams) => {
+  const { barHeights, palette, sortingSpeed, callback } = params
   const animationSequence = bubbleSort(barHeights)
   const bars = getAllBars()
 
@@ -57,10 +54,7 @@ export const animateBubbleSort = (
       if (!isFirstIteration) {
         const [prevFirstBarIdx, prevSecondBarIdx] = animationSequence[iteration - 1]
 
-        changeBarsColor(
-          [bars[prevFirstBarIdx], bars[prevSecondBarIdx]],
-          INACTIVE_BAR_COLOR
-        )
+        changeBarsColor([bars[prevFirstBarIdx], bars[prevSecondBarIdx]], palette.inactive)
       }
 
       const activeBarHeights = [
@@ -68,14 +62,17 @@ export const animateBubbleSort = (
         getNumberFromHeightString(bars[secondBarIdx].style.height),
       ]
 
-      makeBarsActive([
-        { element: bars[firstBarIdx], height: activeBarHeights[1] },
-        { element: bars[secondBarIdx], height: activeBarHeights[0] },
-      ])
+      makeBarsActive(
+        [
+          { element: bars[firstBarIdx], height: activeBarHeights[1] },
+          { element: bars[secondBarIdx], height: activeBarHeights[0] },
+        ],
+        palette.active
+      )
 
       const isLastIteration = iteration === animationSequence.length - 1
       if (isLastIteration && callback) {
-        postSortAnimation(bars, ACTIVE_BAR_COLOR)
+        postSortAnimation(bars, palette.active)
         callback()
       }
     }, iteration * sortingSpeed)

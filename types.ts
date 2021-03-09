@@ -6,3 +6,9 @@ export interface SortingSpeeds {
   normal: number
   fast: number
 }
+export interface AnimateFunctionParams {
+  barHeights: number[]
+  palette: { active: string; inactive: string }
+  sortingSpeed: number
+  callback?: () => void
+}
