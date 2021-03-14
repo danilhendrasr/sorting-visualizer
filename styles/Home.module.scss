@@ -46,3 +46,7 @@
   justify-content: space-evenly;
   width: calc(100vw - 330px);
 }
+
+.bar {
+  transition: height 0.3s;
+}

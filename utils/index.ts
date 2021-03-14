@@ -81,16 +81,18 @@ export const getNumberFromHeightString = (height: string) => {
 
 interface StartAnimationParams {
   barHeights: number[]
-  palette: { active: string; inactive: string }
+  bars
+  palette: { active: string; inactive: string; swapping: string }
   sortingAlgorithm: SortingAlgorithms
   sortingSpeed: number
   callback?: () => void
 }
 
 export const startAnimation = (params: StartAnimationParams) => {
-  const { barHeights, palette, sortingAlgorithm, sortingSpeed, callback } = params
+  const { barHeights, bars, palette, sortingAlgorithm, sortingSpeed, callback } = params
   const animationParams = {
     barHeights,
+    bars,
     palette,
     sortingSpeed,
     callback,
