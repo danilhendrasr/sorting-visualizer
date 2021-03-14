@@ -8,7 +8,8 @@ export interface SortingSpeeds {
 }
 export interface AnimateFunctionParams {
   barHeights: number[]
-  palette: { active: string; inactive: string }
+  bars: HTMLElement[]
+  palette: { active: string; inactive: string; swapping: string }
   sortingSpeed: number
   callback?: () => void
 }

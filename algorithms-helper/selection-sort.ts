@@ -1,102 +1,76 @@
-import { ActiveBar, AnimateFunctionParams } from "../types"
-import { changeBarsColor, getAllBars, makeBarsActive, postSortAnimation } from "../utils"
+import { AnimateFunctionParams } from "../types"
+import {
+  changeBarsColor,
+  postSortAnimation,
+  makeBarsActive,
+  getNumberFromHeightString,
+} from "../utils"
 
-const selectionSort = (inputArray: number[]) => {
-  let animationSequence: [number, number][] = []
-  let unsortedArray = [...inputArray]
-  let arrayState: number[][] = []
+interface SelectionSortAnimationItem {
+  compare?: [number, number]
+  swap?: [number, number]
+}
 
-  for (let x = 0; x < unsortedArray.length; x++) {
-    let currentMinHasChanged = false
-    let currentMin = unsortedArray[x]
-    let currentMinIdx = x
+export const selectionSort = (unsortedArray: number[]) => {
+  const array = unsortedArray.slice()
+  const arrayLength = array.length
+  const animations: SelectionSortAnimationItem[] = []
 
-    // These indexes will be stored as an item in the animation sequence array
-    let selectedBars = [currentMinIdx, currentMinIdx] as [number, number]
-
-    for (let y = x + 1; y < unsortedArray.length; y++) {
-      let currentItem = unsortedArray[y]
-
-      if (currentItem < currentMin) {
-        currentMin = currentItem
-        currentMinIdx = y
-        currentMinHasChanged = true
+  for (let i = 0; i < arrayLength; i++) {
+    let minIdx = i
+    for (let j = i + 1; j < arrayLength; j++) {
+      if (array[minIdx] > array[j]) {
+        minIdx = j
       }
+      animations.push({ compare: [i, j] })
     }
 
-    if (currentMinHasChanged) {
-      // Swap current value with the new currentMin value
-      let temp = unsortedArray[currentMinIdx]
-      unsortedArray[currentMinIdx] = unsortedArray[x]
-      unsortedArray[x] = temp
-
-      // currentMin value has changed, so we need to reassign selectedBars[1]
-      selectedBars[1] = currentMinIdx
-    }
-
-    animationSequence.push(selectedBars)
-
-    // Spread operator is needed to create a shallow copy of the current unsortedArray
-    arrayState.push([...unsortedArray])
+    animations.push({ swap: [i, minIdx] })
+    ;[array[i], array[minIdx]] = [array[minIdx], array[i]]
   }
 
-  return [arrayState, animationSequence]
+  return animations
 }
 
 export const animateSelectionSort = (params: AnimateFunctionParams) => {
-  const { barHeights, palette, sortingSpeed, callback } = params
-  const [arrayStates, animationSequence] = selectionSort(barHeights)
-  const bars = getAllBars()
-
-  for (let i = 0; i < animationSequence.length; i++) {
-    let firstIteration = i === 0
-    let lastIteration = i === animationSequence.length - 1
-
-    const [bar1Idx, bar2Idx] = animationSequence[i]
-
-    const activeBar1 = bars[bar1Idx]
-    const activeBar2 = bars[bar2Idx]
-
-    const activeBar1Height = arrayStates[i][bar2Idx]
-    const activeBar2Height = arrayStates[i][bar1Idx]
-
-    let barsToActiveBars: ActiveBar[] = [
-      {
-        element: activeBar1,
-        height: activeBar2Height,
-      },
-      {
-        element: activeBar2,
-        height: activeBar1Height,
-      },
-    ]
-
+  const { barHeights, bars, palette, sortingSpeed, callback } = params
+  const animations = selectionSort(barHeights)
+  let previousActiveIdxs = []
+  animations.forEach((item, idx) => {
     setTimeout(() => {
-      if (!firstIteration) {
-        // Reset previously active bars' color
-        let prevAnimationSequence = animationSequence[i - 1]
-        let [prevBar1Idx, prevBar2Idx] = prevAnimationSequence
-        let previousActiveBars = [bars[prevBar1Idx], bars[prevBar2Idx]]
-        changeBarsColor(previousActiveBars, palette.inactive)
+      if (idx > 0) {
+        if (!animations[idx - 1].swap) {
+          const previousItem = animations[idx - 1].compare
+          changeBarsColor(
+            [bars[previousItem[0]], bars[previousItem[1]]],
+            palette.inactive
+          )
+        }
       }
 
-      makeBarsActive(barsToActiveBars, palette.active)
-
-      if (lastIteration) {
-        // Revert the last bar to an inactive bar
-        setTimeout(() => {
-          let lastBar = activeBar1
-          changeBarsColor(lastBar, palette.inactive)
-
-          // Because this animate function executes asynchronous function (setTimeout)
-          // if we wanted to do something right after this function is done running,
-          // we have to put the code inside the last setTimeout.
-          // Otherwise, the code will get executed without waiting for the setTimeouts
-          // to get executed.
-          postSortAnimation(bars, palette.active)
-          if (callback) callback()
-        }, sortingSpeed)
+      if (item.compare) {
+        const [idx1, idx2] = item.compare
+        previousActiveIdxs.push([idx1, idx2])
+        changeBarsColor([bars[idx1], bars[idx2]], palette.active)
+      } else if (item.swap) {
+        const [idx1, idx2] = item.swap
+        const heights = [
+          getNumberFromHeightString(bars[idx1].style.height),
+          getNumberFromHeightString(bars[idx2].style.height),
+        ]
+        makeBarsActive(
+          [
+            { element: bars[idx1], height: heights[1] },
+            { element: bars[idx2], height: heights[0] },
+          ],
+          palette.swapping
+        )
       }
-    }, i * sortingSpeed)
-  }
+
+      if (callback && idx === animations.length - 1) {
+        postSortAnimation(bars as any, palette.active)
+        callback()
+      }
+    }, idx * sortingSpeed)
+  })
 }

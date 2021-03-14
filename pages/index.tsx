@@ -1,7 +1,7 @@
 // @ts-ignore
 import styles from "../styles/Home.module.scss"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   changeBarsColor,
   generateBarHeights,
@@ -43,6 +43,8 @@ const Home: React.FC = () => {
   const palette = {
     active: geistUIPalette.foreground,
     inactive: geistUIPalette.errorLight,
+    marked: geistUIPalette.warningDark,
+    swapping: geistUIPalette.success,
   }
 
   const [barHeights, setBarHeights] = useState<number[]>([])
@@ -52,9 +54,9 @@ const Home: React.FC = () => {
     "Selection"
   )
   const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
+  const barsRef = useRef<HTMLElement[]>(null)
 
-  useEffect(resetBars, [arrayLength])
-  useEffect(resetBars, [selectedAlgorithm])
+  useEffect(resetBars, [arrayLength, selectedAlgorithm])
 
   function resetBars() {
     const newBarHeights = generateBarHeights(arrayLength)
@@ -62,17 +64,19 @@ const Home: React.FC = () => {
     setSortingState("Sort")
     requestAnimationFrame(() => {
       const barsDomEl = getAllBars()
-      const sampleBg = barsDomEl[5].style.backgroundColor
+      barsRef.current = Array.from(barsDomEl)
+      const sampleBg = barsRef.current[5].style.backgroundColor
       if (sampleBg === hexToRgb(palette.active)) {
-        changeBarsColor(barsDomEl, palette.inactive)
+        changeBarsColor(barsRef.current, palette.inactive)
       }
     })
   }
 
-  function triggerAnimation() {
+  function triggerAnimation(bars: HTMLElement[]) {
     setSortingState("Sorting")
     startAnimation({
       barHeights,
+      bars,
       palette,
       sortingAlgorithm: selectedAlgorithm,
       sortingSpeed: sortingSpeedTable[sortingSpeed],
@@ -106,7 +110,7 @@ const Home: React.FC = () => {
               sortingSpeed={sortingSpeed}
             />
             <Spacer y={1.5} />
-            <SortButton onClick={triggerAnimation} />
+            <SortButton onClick={() => triggerAnimation(barsRef.current)} />
             <Spacer y={0.6} />
             <ResetButton onClick={resetBars} />
             <Spacer y={1.7} />
