@@ -1,6 +1,6 @@
 export type SortingState = "Sort" | "Sorting" | "Sorted"
 export type ActiveBar = { element: HTMLElement; height: number }
-export type SortingAlgorithms = "Selection" | "Insertion" | "Bubble"
+export type SortingAlgorithms = "Selection" | "Insertion" | "Bubble" | "Merge"
 export interface SortingSpeeds {
   slow: number
   normal: number
