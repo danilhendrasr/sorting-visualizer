@@ -2,6 +2,7 @@ import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { ActiveBar, SortingAlgorithms } from "../types"
+import { animateMergeSort } from "../algorithms-helper/merge-sort"
 
 export const generateARandomNumber = (min: number, max: number) => {
   min = Math.ceil(min)
@@ -26,11 +27,7 @@ const isSingleHTMLElement = (
 
   if (isHTMLCollection) {
     return false
-  } else if (isArray) {
-    return false
-  } else {
-    return true
-  }
+  } else return !isArray
 }
 
 export const changeBarsColor = (
@@ -54,12 +51,11 @@ export const makeBarsActive = (bars: ActiveBar[], activeBarColor: string) => {
 }
 
 export const getAllBars = () => {
-  const bars = document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
-  return bars
+  return document.getElementsByClassName("bar") as HTMLCollectionOf<HTMLElement>
 }
 
 export const postSortAnimation = (
-  bars: HTMLCollectionOf<HTMLElement>,
+  bars: HTMLCollectionOf<HTMLElement> | HTMLElement[],
   endColor: string
 ) => {
   for (let n = 0; n < bars.length; n++) {
@@ -108,6 +104,9 @@ export const startAnimation = (params: StartAnimationParams) => {
     case "Bubble":
       animateBubbleSort(animationParams)
       break
+    case "Merge":
+      animateMergeSort(animationParams)
+      break
   }
 }
 
@@ -117,7 +116,7 @@ export const hexToRgb = (hex: string) => {
     return r + r + g + g + b + b
   })
 
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   const rgb = {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
