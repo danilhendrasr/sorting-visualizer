@@ -19,11 +19,11 @@ interface Props {
 export const SpeedControl: React.FC<Props> = ({ sortingSpeed, onSpeedChange }) => {
   const isControlsDisabled = useControlsDisabled()
 
-  const controlButtons = Object.keys<SortingSpeeds>(sortingSpeedTable).map((key, idx) => {
+  const controlButtons = Object.keys(sortingSpeedTable).map((key, idx) => {
     return (
       <Button
         key={idx}
-        onClick={() => onSpeedChange(key)}
+        onClick={() => onSpeedChange(key as keyof SortingSpeeds)}
         style={sortingSpeed === key ? activeSortingSpeedBtn : undefined}>
         {key}
       </Button>
