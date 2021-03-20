@@ -14,6 +14,7 @@ interface SelectionSortAnimationItem {
 export const selectionSort = (unsortedArray: number[]) => {
   const array = unsortedArray.slice()
   const arrayLength = array.length
+  // TODO: Add more key to the animation steps. E.g: correctOrder, wrongOrder, etc.
   const animations: SelectionSortAnimationItem[] = []
 
   for (let i = 0; i < arrayLength; i++) {
@@ -33,7 +34,8 @@ export const selectionSort = (unsortedArray: number[]) => {
 }
 
 export const animateSelectionSort = (params: AnimateFunctionParams) => {
-  const { barHeights, bars, palette, sortingSpeed, callback } = params
+  const { bars, palette, sortingSpeed, callback } = params
+  const barHeights = bars.map((bar) => getNumberFromHeightString(bar.style.height))
   const animations = selectionSort(barHeights)
   let previousActiveIdxs = []
   animations.forEach((item, idx) => {
