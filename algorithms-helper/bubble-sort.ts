@@ -1,80 +1,75 @@
 import { AnimateFunctionParams } from "../types"
-import {
-  changeBarsColor,
-  getAllBars,
-  getNumberFromHeightString,
-  makeBarsActive,
-  postSortAnimation,
-} from "../utils"
+import { changeBarsColor, getNumberFromHeightString, postSortAnimation } from "../utils"
 
-const bubbleSort = (array: number[]) => {
-  let animaSeq: [number, number][] = []
-  let copyArray = [...array]
+interface AnimationStep {
+  compare?: [number, number]
+  wrongOrder?: [number, number]
+  correctOrder?: [number, number]
+  swap?: [number, number]
+}
 
-  let isSortingDone = false
-  while (!isSortingDone) {
-    for (let i = 0; i < copyArray.length - 1; i++) {
-      const isInLastPosition = i === copyArray.length - 1
-      if (isInLastPosition) break
+const getBubbleSortAnimationSteps = (array: number[]) => {
+  const animationSteps = [] as AnimationStep[]
 
-      const left = copyArray[i]
-      const right = copyArray[i + 1]
-
-      if (left > right) {
-        const temp = right
-        copyArray[i + 1] = left
-        copyArray[i] = temp
-        animaSeq.push([i, i + 1])
+  const arLength = array.length
+  for (let x = 0; x < arLength; x++) {
+    let swapHappens = false
+    for (let y = 0; y < arLength - x - 1; y++) {
+      const comparedIdxs = [y, y + 1] as [number, number]
+      animationSteps.push({ compare: comparedIdxs })
+      if (array[y] > array[y + 1]) {
+        animationSteps.push({ wrongOrder: comparedIdxs })
+        ;[array[y], array[y + 1]] = [array[y + 1], array[y]]
+        animationSteps.push({ swap: comparedIdxs })
+        swapHappens = true
+      } else {
+        animationSteps.push({ correctOrder: comparedIdxs })
       }
     }
 
-    let isArraySorted = true
-    for (let j = 0; j < copyArray.length - 1; j++) {
-      const left = copyArray[j]
-      const right = copyArray[j + 1]
-
-      if (left > right) isArraySorted = false
-    }
-
-    if (isArraySorted) isSortingDone = true
+    if (!swapHappens) break
   }
 
-  return animaSeq
+  return animationSteps
 }
 
-export const animateBubbleSort = (params: AnimateFunctionParams) => {
-  const { barHeights, palette, sortingSpeed, callback } = params
-  const animationSequence = bubbleSort(barHeights)
-  const bars = getAllBars()
+const animateBubbleSort = (params: AnimateFunctionParams) => {
+  const { bars, palette, sortingSpeed, callback } = params
+  const barsHeights = bars.map((bar) => getNumberFromHeightString(bar.style.height))
+  const animationSteps = getBubbleSortAnimationSteps(barsHeights)
 
-  animationSequence.forEach((activeBarIdxs, iteration) => {
-    const [firstBarIdx, secondBarIdx] = activeBarIdxs
+  let prevActiveBars = [] as HTMLElement[]
+  animationSteps.forEach((step, idx) => {
     setTimeout(() => {
-      const isFirstIteration = iteration === 0
-      if (!isFirstIteration) {
-        const [prevFirstBarIdx, prevSecondBarIdx] = animationSequence[iteration - 1]
-
-        changeBarsColor([bars[prevFirstBarIdx], bars[prevSecondBarIdx]], palette.inactive)
+      if (idx > 0) {
+        changeBarsColor(prevActiveBars, palette.idle)
       }
 
-      const activeBarHeights = [
-        getNumberFromHeightString(bars[firstBarIdx].style.height),
-        getNumberFromHeightString(bars[secondBarIdx].style.height),
-      ]
+      if (step.hasOwnProperty("compare")) {
+        prevActiveBars = step.compare.map((barIdx) => bars[barIdx])
+        changeBarsColor(prevActiveBars, palette.compare)
+      } else if (step.hasOwnProperty("wrongOrder")) {
+        prevActiveBars = step.wrongOrder.map((barIdx) => bars[barIdx])
+        changeBarsColor(prevActiveBars, palette.wrongOrder)
+      } else if (step.hasOwnProperty("correctOrder")) {
+        prevActiveBars = step.correctOrder.map((barIdx) => bars[barIdx])
+        changeBarsColor(prevActiveBars, palette.correctOrder)
+      } else {
+        prevActiveBars = step.swap.map((barIdx) => bars[barIdx])
+        prevActiveBars.forEach((bar) => (bar.style.backgroundColor = palette.swap))
+        ;[prevActiveBars[0].style.height, prevActiveBars[1].style.height] = [
+          prevActiveBars[1].style.height,
+          prevActiveBars[0].style.height,
+        ]
+      }
 
-      makeBarsActive(
-        [
-          { element: bars[firstBarIdx], height: activeBarHeights[1] },
-          { element: bars[secondBarIdx], height: activeBarHeights[0] },
-        ],
-        palette.active
-      )
-
-      const isLastIteration = iteration === animationSequence.length - 1
-      if (isLastIteration && callback) {
-        postSortAnimation(bars, palette.active)
+      if (idx === animationSteps.length - 1 && callback) {
+        changeBarsColor(prevActiveBars, palette.idle)
+        postSortAnimation(bars, palette.compare)
         callback()
       }
-    }, iteration * sortingSpeed)
+    }, idx * sortingSpeed)
   })
 }
+
+export { animateBubbleSort }
