@@ -41,17 +41,14 @@ export const animateSelectionSort = (params: AnimateFunctionParams) => {
       if (idx > 0) {
         if (!animations[idx - 1].swap) {
           const previousItem = animations[idx - 1].compare
-          changeBarsColor(
-            [bars[previousItem[0]], bars[previousItem[1]]],
-            palette.inactive
-          )
+          changeBarsColor([bars[previousItem[0]], bars[previousItem[1]]], palette.idle)
         }
       }
 
       if (item.compare) {
         const [idx1, idx2] = item.compare
         previousActiveIdxs.push([idx1, idx2])
-        changeBarsColor([bars[idx1], bars[idx2]], palette.active)
+        changeBarsColor([bars[idx1], bars[idx2]], palette.compare)
       } else if (item.swap) {
         const [idx1, idx2] = item.swap
         const heights = [
@@ -63,12 +60,12 @@ export const animateSelectionSort = (params: AnimateFunctionParams) => {
             { element: bars[idx1], height: heights[1] },
             { element: bars[idx2], height: heights[0] },
           ],
-          palette.swapping
+          palette.swap
         )
       }
 
       if (callback && idx === animations.length - 1) {
-        postSortAnimation(bars as any, palette.active)
+        postSortAnimation(bars as any, palette.compare)
         callback()
       }
     }, idx * sortingSpeed)

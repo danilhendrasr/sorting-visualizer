@@ -70,13 +70,13 @@ export const animateInsertionSort = (params: AnimateFunctionParams) => {
 
     setTimeout(() => {
       if (!isFirstIteration) {
-        changeBarsColor(bars[animationSequence[i - 1].idx], palette.inactive)
+        changeBarsColor(bars[animationSequence[i - 1].idx], palette.idle)
       }
 
       prevIdxBarHeights.push(bars[idxToInsertTo].style.height)
       makeBarsActive(
         [{ element: bars[idxToInsertTo], height: barHeights[barToMove] }],
-        palette.active
+        palette.compare
       )
     }, i * sortingSpeed)
 
@@ -87,8 +87,8 @@ export const animateInsertionSort = (params: AnimateFunctionParams) => {
 
         const isLastInnerIteration = x === rightShift
         if (isLastInnerIteration && isLastIteration) {
-          changeBarsColor(bars[idxToInsertTo], palette.inactive)
-          postSortAnimation(bars, palette.active)
+          changeBarsColor(bars[idxToInsertTo], palette.idle)
+          postSortAnimation(bars, palette.compare)
           if (callback) callback()
         }
       }, i * sortingSpeed)

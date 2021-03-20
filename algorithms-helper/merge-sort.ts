@@ -72,7 +72,7 @@ const animateMergeSort = (params: AnimateFunctionParams) => {
       if (idx > 0 && previousOp === "compare") {
         setTimeout(() => {
           const [idx1, idx2] = animations[idx - 1].compare
-          changeBarsColor([bars[idx1], bars[idx2]], palette.inactive)
+          changeBarsColor([bars[idx1], bars[idx2]], palette.idle)
         }, 5)
       }
 
@@ -80,7 +80,7 @@ const animateMergeSort = (params: AnimateFunctionParams) => {
         previousOp = "compare"
         const [idx1, idx2] = animation.compare
         const barsToOperate = [bars[idx1], bars[idx2]]
-        changeBarsColor(barsToOperate, palette.active)
+        changeBarsColor(barsToOperate, palette.compare)
         previousActiveBars = barsToOperate
       } else {
         const { idxToInsertTo, moveFromIdx } = animation
@@ -93,9 +93,9 @@ const animateMergeSort = (params: AnimateFunctionParams) => {
       }
 
       if (idx === animations.length - 1 && callback) {
-        changeBarsColor(previousActiveBars, palette.inactive)
+        changeBarsColor(previousActiveBars, palette.idle)
         callback()
-        postSortAnimation(bars, palette.active)
+        postSortAnimation(bars, palette.compare)
       }
     }, idx * sortingSpeed)
   })

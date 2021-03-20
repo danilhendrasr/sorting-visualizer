@@ -22,7 +22,7 @@ import {
 } from "../components"
 import { Spacer, useTheme } from "@geist-ui/react"
 import { sortingSpeedTable } from "../constants"
-import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
+import { BarColorPalette, SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
 import { default as Head } from "next/head"
 import { AppStateContext } from "../contexts/app-state"
 
@@ -40,11 +40,13 @@ const getBarElementsFromBarHeights = (barHeights: number[]) => {
 
 const Home: React.FC = () => {
   const { palette: geistUIPalette } = useTheme()
-  const palette = {
-    active: geistUIPalette.foreground,
-    inactive: geistUIPalette.errorLight,
-    marked: geistUIPalette.warningDark,
-    swapping: geistUIPalette.success,
+  const palette: BarColorPalette = {
+    compare: geistUIPalette.foreground,
+    correctOrder: geistUIPalette.cyanLight,
+    idle: geistUIPalette.accents_5,
+    properlyPositioned: geistUIPalette.violet,
+    swap: geistUIPalette.success,
+    wrongOrder: geistUIPalette.error,
   }
 
   const [barHeights, setBarHeights] = useState<number[]>([])
@@ -66,8 +68,8 @@ const Home: React.FC = () => {
       const barsDomEl = getAllBars()
       barsRef.current = Array.from(barsDomEl)
       const sampleBg = barsRef.current[5].style.backgroundColor
-      if (sampleBg === hexToRgb(palette.active)) {
-        changeBarsColor(barsRef.current, palette.inactive)
+      if (sampleBg === hexToRgb(palette.compare)) {
+        changeBarsColor(barsRef.current, palette.idle)
       }
     })
   }

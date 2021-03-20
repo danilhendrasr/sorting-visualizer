@@ -1,7 +1,7 @@
 import { animateBubbleSort } from "../algorithms-helper/bubble-sort"
 import { animateInsertionSort } from "../algorithms-helper/insertion-sort"
 import { animateSelectionSort } from "../algorithms-helper/selection-sort"
-import { ActiveBar, SortingAlgorithms } from "../types"
+import { ActiveBar, BarColorPalette, SortingAlgorithms } from "../types"
 import { animateMergeSort } from "../algorithms-helper/merge-sort"
 
 export const generateARandomNumber = (min: number, max: number) => {
@@ -78,7 +78,7 @@ export const getNumberFromHeightString = (height: string) => {
 interface StartAnimationParams {
   barHeights: number[]
   bars
-  palette: { active: string; inactive: string; swapping: string }
+  palette: BarColorPalette
   sortingAlgorithm: SortingAlgorithms
   sortingSpeed: number
   callback?: () => void
