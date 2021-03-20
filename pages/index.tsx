@@ -42,7 +42,7 @@ const Home: React.FC = () => {
   const palette: BarColorPalette = {
     compare: geistUIPalette.foreground,
     correctOrder: geistUIPalette.cyanLight,
-    idle: geistUIPalette.accents_5,
+    idle: geistUIPalette.accents_4,
     properlyPositioned: geistUIPalette.violet,
     swap: geistUIPalette.success,
     wrongOrder: geistUIPalette.error,
