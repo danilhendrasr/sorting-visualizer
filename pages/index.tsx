@@ -26,16 +26,15 @@ import { BarColorPalette, SortingAlgorithms, SortingSpeeds, SortingState } from 
 import { default as Head } from "next/head"
 import { AppStateContext } from "../contexts/app-state"
 
-const getBarElementsFromBarHeights = (barHeights: number[]) => {
-  const bars = barHeights.map((heightValue, idx) => (
+const getBarElementsFromBarHeights = (barHeights: number[], defaultBg: string) => {
+  return barHeights.map((heightValue, idx) => (
     <Bar
+      defaultBg={defaultBg}
       height={heightValue}
       key={idx}
       width={Math.floor(window.innerWidth / barHeights.length) / 2}
     />
   ))
-
-  return bars
 }
 
 const Home: React.FC = () => {
@@ -121,7 +120,7 @@ const Home: React.FC = () => {
           </div>
         </AppStateContext.Provider>
         <div className={styles.barsContainer}>
-          {getBarElementsFromBarHeights(barHeights)}
+          {getBarElementsFromBarHeights(barHeights, palette.idle)}
         </div>
       </div>
     </>

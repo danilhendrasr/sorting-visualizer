@@ -1,20 +1,17 @@
-import { useTheme } from "@geist-ui/react"
-
 interface Props {
+  defaultBg: string
   height: number
   width: number
 }
 
-export const Bar: React.FC<Props> = ({ height, width }) => {
-  const { palette } = useTheme()
-
+export const Bar: React.FC<Props> = ({ defaultBg, height, width }) => {
   const barStylings: React.CSSProperties = {
     height: `${height}%`,
-    backgroundColor: palette.errorLight,
+    backgroundColor: defaultBg,
     width: width,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
   }
 
-  return <div className="bar" style={barStylings}></div>
+  return <div className="bar" style={barStylings} />
 }
