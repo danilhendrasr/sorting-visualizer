@@ -66,7 +66,7 @@ export const postSortAnimation = (
   }
 }
 
-export const getNumberFromHeightString = (height: string) => {
+export const getNumberValueFromElementHeight = (height: string) => {
   const unitlessHeight = height.replace(
     /(cm|mm|in|px|pt|pc|em|rem|vw|vh|vmin|vmax|ex|ch|%)$/,
     ""

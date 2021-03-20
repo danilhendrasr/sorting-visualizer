@@ -1,3 +1,4 @@
+// TODO: Refactor all helper functions in this file
 import { AnimateFunctionParams } from "../types"
 import { getAllBars, changeBarsColor, makeBarsActive, postSortAnimation } from "../utils"
 
@@ -8,6 +9,7 @@ interface InsertionAnimationSequence {
 }
 
 const insertionSort = (arrayToSort: number[]): InsertionAnimationSequence[] => {
+  // TODO: Add more key to the animation steps. E.g: correctOrder, wrongOrder, etc.
   let animaSeq: InsertionAnimationSequence[] = []
   let sortedArray: number[] = []
 

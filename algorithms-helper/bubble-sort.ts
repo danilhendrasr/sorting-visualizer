@@ -1,5 +1,9 @@
 import { AnimateFunctionParams } from "../types"
-import { changeBarsColor, getNumberFromHeightString, postSortAnimation } from "../utils"
+import {
+  changeBarsColor,
+  getNumberValueFromElementHeight,
+  postSortAnimation,
+} from "../utils"
 
 interface AnimationStep {
   compare?: [number, number]
@@ -35,7 +39,7 @@ const getBubbleSortAnimationSteps = (array: number[]) => {
 
 const animateBubbleSort = (params: AnimateFunctionParams) => {
   const { bars, palette, sortingSpeed, callback } = params
-  const barsHeights = bars.map((bar) => getNumberFromHeightString(bar.style.height))
+  const barsHeights = bars.map((bar) => getNumberValueFromElementHeight(bar.style.height))
   const animationSteps = getBubbleSortAnimationSteps(barsHeights)
 
   let prevActiveBars = [] as HTMLElement[]

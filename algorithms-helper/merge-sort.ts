@@ -1,5 +1,9 @@
 import { AnimateFunctionParams } from "../types"
-import { changeBarsColor, getNumberFromHeightString, postSortAnimation } from "../utils"
+import {
+  changeBarsColor,
+  getNumberValueFromElementHeight,
+  postSortAnimation,
+} from "../utils"
 
 interface animationHolder {
   compare?: [number, number]
@@ -61,7 +65,7 @@ const mergeSort = (params: mergeSortParams) => {
 
 const animateMergeSort = (params: AnimateFunctionParams) => {
   const { bars, palette, sortingSpeed, callback } = params
-  const array = bars.map((bar) => getNumberFromHeightString(bar.style.height))
+  const array = bars.map((bar) => getNumberValueFromElementHeight(bar.style.height))
   // TODO: Add more key to the animation steps. E.g: correctOrder, wrongOrder, etc.
   const animations = []
   mergeSort({ array, start: 0, end: array.length - 1, animationHolder: animations })

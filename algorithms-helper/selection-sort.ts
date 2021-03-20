@@ -3,7 +3,7 @@ import {
   changeBarsColor,
   postSortAnimation,
   makeBarsActive,
-  getNumberFromHeightString,
+  getNumberValueFromElementHeight,
 } from "../utils"
 
 interface SelectionSortAnimationItem {
@@ -35,7 +35,7 @@ export const selectionSort = (unsortedArray: number[]) => {
 
 export const animateSelectionSort = (params: AnimateFunctionParams) => {
   const { bars, palette, sortingSpeed, callback } = params
-  const barHeights = bars.map((bar) => getNumberFromHeightString(bar.style.height))
+  const barHeights = bars.map((bar) => getNumberValueFromElementHeight(bar.style.height))
   const animations = selectionSort(barHeights)
   let previousActiveIdxs = []
   animations.forEach((item, idx) => {
@@ -54,8 +54,8 @@ export const animateSelectionSort = (params: AnimateFunctionParams) => {
       } else if (item.swap) {
         const [idx1, idx2] = item.swap
         const heights = [
-          getNumberFromHeightString(bars[idx1].style.height),
-          getNumberFromHeightString(bars[idx2].style.height),
+          getNumberValueFromElementHeight(bars[idx1].style.height),
+          getNumberValueFromElementHeight(bars[idx2].style.height),
         ]
         makeBarsActive(
           [
