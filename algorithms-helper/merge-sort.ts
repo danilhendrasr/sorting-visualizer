@@ -100,7 +100,7 @@ const animateMergeSort = (params: AnimateFunctionParams) => {
       if (idx === animations.length - 1 && callback) {
         changeBarsColor(previousActiveBars, palette.idle)
         callback()
-        postSortAnimation(bars, palette.compare)
+        postSortAnimation(bars, palette.correctOrder)
       }
     }, idx * sortingSpeed)
   })

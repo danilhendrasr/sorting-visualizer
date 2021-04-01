@@ -63,7 +63,8 @@ export const animateSelectionSort = (params: AnimateFunctionParams) => {
       }
 
       if (callback && idx === animations.length - 1) {
-        postSortAnimation(bars as any, palette.compare)
+        changeBarsColor(prevActiveBars, palette.idle)
+        postSortAnimation(bars, palette.correctOrder)
         callback()
       }
     }, idx * sortingSpeed)

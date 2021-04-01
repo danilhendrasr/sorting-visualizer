@@ -69,7 +69,7 @@ const animateBubbleSort = (params: AnimateFunctionParams) => {
 
       if (idx === animationSteps.length - 1 && callback) {
         changeBarsColor(prevActiveBars, palette.idle)
-        postSortAnimation(bars, palette.compare)
+        postSortAnimation(bars, palette.correctOrder)
         callback()
       }
     }, idx * sortingSpeed)

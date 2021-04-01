@@ -66,7 +66,7 @@ const Home: React.FC = () => {
       const barsDomEl = getAllBars()
       barsRef.current = Array.from(barsDomEl)
       const sampleBg = barsRef.current[5].style.backgroundColor
-      if (sampleBg === hexToRgb(palette.compare)) {
+      if (sampleBg === hexToRgb(palette.correctOrder)) {
         changeBarsColor(barsRef.current, palette.idle)
       }
     })

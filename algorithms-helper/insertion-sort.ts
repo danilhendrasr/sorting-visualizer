@@ -90,7 +90,7 @@ export const animateInsertionSort = (params: AnimateFunctionParams) => {
         const isLastInnerIteration = x === rightShift
         if (isLastInnerIteration && isLastIteration) {
           changeBarsColor(bars[idxToInsertTo], palette.idle)
-          postSortAnimation(bars, palette.compare)
+          postSortAnimation(bars, palette.correctOrder)
           if (callback) callback()
         }
       }, i * sortingSpeed)
