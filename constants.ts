@@ -7,7 +7,7 @@ export const ALGORITHMS_LIST: SortingAlgorithms[] = [
   "Merge",
 ]
 export const sortingSpeedTable: SortingSpeeds = {
-  slow: 100,
+  slow: 300,
   normal: 30,
   fast: 5,
 }
