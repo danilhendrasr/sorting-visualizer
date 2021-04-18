@@ -7,23 +7,13 @@ import { useControlsDisabled } from "../hooks"
 import { ALGORITHMS_LIST } from "../constants"
 
 interface Props {
-  selectedAlgorithm: SortingAlgorithms
+  selected: SortingAlgorithms
   onChange: (algorithm: SortingAlgorithms) => void
 }
 
-const getSelectOptionsFromAlgorithmsList = (algorithmsList: SortingAlgorithms[]) => {
-  const selectOptions = algorithmsList.map((algorithm, idx) => (
-    <Select.Option key={idx} value={algorithm}>
-      {`${algorithm} sort`}
-    </Select.Option>
-  ))
-
-  return selectOptions
-}
-
-export const AlgorithmSelector: React.FC<Props> = ({ selectedAlgorithm, onChange }) => {
+const AlgorithmSelector: React.FC<Props> = ({ selected, onChange }) => {
   const isControlsDisabled = useControlsDisabled()
-  const selectOptions = getSelectOptionsFromAlgorithmsList(ALGORITHMS_LIST)
+  const algorithms = getAlgorithmOptions(ALGORITHMS_LIST)
 
   return (
     <div className={styles.sideBarInputContainer}>
@@ -33,9 +23,20 @@ export const AlgorithmSelector: React.FC<Props> = ({ selectedAlgorithm, onChange
         disabled={isControlsDisabled}
         onChange={(algorithm) => onChange(algorithm as SortingAlgorithms)}
         size="large"
-        value={selectedAlgorithm}>
-        {selectOptions}
+        value={selected}>
+        {algorithms}
       </Select>
     </div>
   )
 }
+
+const getAlgorithmOptions = (algorithms: SortingAlgorithms[]) => {
+  const selectOptions = algorithms.map((algorithm, idx) => (
+    <Select.Option key={idx} value={algorithm}>
+      {`${algorithm} sort`}
+    </Select.Option>
+  ))
+  return selectOptions
+}
+
+export { AlgorithmSelector }

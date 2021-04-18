@@ -98,7 +98,7 @@ const Home: React.FC = () => {
             <Spacer y={1} />
             <AlgorithmSelector
               onChange={setSelectedAlgorithm}
-              selectedAlgorithm={selectedAlgorithm}
+              selected={selectedAlgorithm}
             />
             <ArrayLengthModifier
               onChange={(value) => setArrayLength(value)}
