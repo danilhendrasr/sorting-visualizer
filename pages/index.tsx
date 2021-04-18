@@ -22,11 +22,19 @@ import {
 } from "../components"
 import { Spacer, useTheme } from "@geist-ui/react"
 import { sortingSpeedTable } from "../constants"
-import { BarColorPalette, SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
+import {
+  BarColorPalette,
+  SortingAlgorithms,
+  SortingSpeeds,
+  SortingState,
+} from "../types"
 import { default as Head } from "next/head"
 import { AppStateContext } from "../contexts/app-state"
 
-const getBarElementsFromBarHeights = (barHeights: number[], defaultBg: string) => {
+const getBarElementsFromBarHeights = (
+  barHeights: number[],
+  defaultBg: string
+) => {
   return barHeights.map((heightValue, idx) => (
     <Bar
       defaultBg={defaultBg}
@@ -53,7 +61,9 @@ const Home: React.FC = () => {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<SortingAlgorithms>(
     "Selection"
   )
-  const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>("normal")
+  const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>(
+    "normal"
+  )
   const barsRef = useRef<HTMLElement[]>(null)
 
   useEffect(resetBars, [arrayLength, selectedAlgorithm])
@@ -106,7 +116,9 @@ const Home: React.FC = () => {
             />
             <Spacer y={0.5} />
             <SpeedControl
-              onSpeedChange={(speed: keyof SortingSpeeds) => setSortingSpeed(speed)}
+              onSortingSpeedChange={(speed: keyof SortingSpeeds) =>
+                setSortingSpeed(speed)
+              }
               sortingSpeed={sortingSpeed}
             />
             <Spacer y={1.5} />
