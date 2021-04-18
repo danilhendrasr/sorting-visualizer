@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.scss"
 
 import { Select, Text, Spacer } from "@geist-ui/react"
 import { SortingAlgorithms } from "../types"
-import { useControlsDisabled } from "../hooks"
+import { useShouldDisableControlPanel } from "../hooks"
 import { ALGORITHMS_LIST } from "../constants"
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const AlgorithmSelector: React.FC<Props> = ({ selected, onChange }) => {
-  const isControlsDisabled = useControlsDisabled()
+  const disable = useShouldDisableControlPanel()
   const algorithms = getAlgorithmOptions(ALGORITHMS_LIST)
 
   return (
@@ -20,7 +20,7 @@ const AlgorithmSelector: React.FC<Props> = ({ selected, onChange }) => {
       <Text>Select Algorithm</Text>
       <Spacer y={-0.4} />
       <Select
-        disabled={isControlsDisabled}
+        disabled={disable}
         onChange={(algorithm) => onChange(algorithm as SortingAlgorithms)}
         size="large"
         value={selected}>

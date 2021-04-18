@@ -2,7 +2,7 @@
 import styles from "../styles/Home.module.scss"
 
 import { Text, Slider } from "@geist-ui/react"
-import { useControlsDisabled } from "../hooks"
+import { useShouldDisableControlPanel } from "../hooks"
 
 interface Props {
   value: number
@@ -10,13 +10,13 @@ interface Props {
 }
 
 export const ArrayLengthModifier: React.FC<Props> = ({ value, onChange }) => {
-  const isControlsDisabled = useControlsDisabled()
+  const disable = useShouldDisableControlPanel()
 
   return (
     <div className={styles.sideBarInputContainer}>
       <Text>Length of array</Text>
       <Slider
-        disabled={isControlsDisabled}
+        disabled={disable}
         max={100}
         min={10}
         onChange={onChange}

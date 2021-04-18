@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.scss"
 
 import { Text, Spacer, ButtonGroup, Button } from "@geist-ui/react"
 import { SortingSpeeds } from "../types"
-import { useControlsDisabled } from "../hooks"
+import { useShouldDisableControlPanel } from "../hooks"
 import { sortingSpeedTable } from "../constants"
 
 interface Props {
@@ -15,7 +15,7 @@ const SpeedControl: React.FC<Props> = ({
   sortingSpeed,
   onSortingSpeedChange,
 }) => {
-  const disable = useControlsDisabled()
+  const disable = useShouldDisableControlPanel()
   const controlButtons = getSpeedCtrlBtns(sortingSpeed, onSortingSpeedChange)
 
   return (

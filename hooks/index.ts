@@ -2,13 +2,13 @@ import { useContext } from "react"
 import { AppStateContext } from "../contexts/app-state"
 
 /**
- * See if any form of sorting controls should be disabled
- * @returns Are controls should be disabled
+ * See if control panel should be disabled
+ * @returns Should control panel be disabled
  */
-const useControlsDisabled = () => {
+const useShouldDisableControlPanel = () => {
   const sortingState = useContext(AppStateContext).sortingState
-  const isControlsDisabled = sortingState === "Sorting"
-  return isControlsDisabled
+  const shouldDisableControls = sortingState === "Sorting"
+  return shouldDisableControls
 }
 
-export { useControlsDisabled }
+export { useShouldDisableControlPanel }
