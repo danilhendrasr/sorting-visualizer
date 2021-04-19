@@ -4,19 +4,19 @@ import { animateSelectionSort } from "../algorithms-helper/selection-sort"
 import { ActiveBar, BarColorPalette, SortingAlgorithms } from "../types"
 import { animateMergeSort } from "../algorithms-helper/merge-sort"
 
-export const generateARandomNumber = (min: number, max: number) => {
+export const getRandomNumber = (min: number, max: number) => {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const generateBarHeights = (amountOfBar: number) => {
-  let newBarHeights: Set<number> = new Set<number>()
-  while (newBarHeights.size < amountOfBar) {
-    const randomHeight = generateARandomNumber(1, 100)
-    newBarHeights.add(randomHeight)
+export const getNewArray = (amountOfBars: number) => {
+  let newArray: Set<number> = new Set<number>()
+  while (newArray.size < amountOfBars) {
+    const randomNumber = getRandomNumber(1, 100)
+    newArray.add(randomNumber)
   }
-  return Array.from(newBarHeights)
+  return Array.from(newArray)
 }
 
 const isSingleHTMLElement = (
@@ -85,7 +85,14 @@ interface StartAnimationParams {
 }
 
 export const startAnimation = (params: StartAnimationParams) => {
-  const { barHeights, bars, palette, sortingAlgorithm, sortingSpeed, callback } = params
+  const {
+    barHeights,
+    bars,
+    palette,
+    sortingAlgorithm,
+    sortingSpeed,
+    callback,
+  } = params
   const animationParams = {
     barHeights,
     bars,

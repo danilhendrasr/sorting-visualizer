@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.scss"
 import React from "react"
 import {
   changeBarsColor,
-  generateBarHeights,
+  getNewArray,
   getAllBars,
   hexToRgb,
   startAnimation,
@@ -65,8 +65,8 @@ class Index extends React.Component<{ children: JSX.Element }, HomeState> {
   resetBars = () => {
     const barPalette = this.context
     const { arrayLength } = this.state
-    const newBarHeights = generateBarHeights(arrayLength)
-    this.setState({ array: newBarHeights, sortingState: "Sort" })
+    const newArray = getNewArray(arrayLength)
+    this.setState({ array: newArray, sortingState: "Sort" })
     requestAnimationFrame(() => {
       const barsDomEl = Array.from(getAllBars())
       const sampleBg = barsDomEl[5].style.backgroundColor
