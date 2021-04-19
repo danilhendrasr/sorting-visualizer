@@ -1,8 +1,11 @@
+import { GeistUIThemes } from "@geist-ui/react"
 import { createContext } from "react"
-import { SortingState } from "../types"
+import { BarColorPalette, SortingState } from "../types"
 
 interface AppStateCtx {
   sortingState: SortingState
 }
 
 export const AppStateContext = createContext<AppStateCtx>(undefined)
+
+export const BarPaletteCtx = createContext<BarColorPalette>(undefined)

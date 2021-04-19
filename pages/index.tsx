@@ -1,7 +1,7 @@
 // @ts-ignore
 import styles from "../styles/Home.module.scss"
 
-import React, { useEffect, useRef, useState } from "react"
+import React from "react"
 import {
   changeBarsColor,
   generateBarHeights,
@@ -20,122 +20,147 @@ import {
   SortButton,
   SpeedControl,
 } from "../components"
-import { Spacer, useTheme } from "@geist-ui/react"
+import { Spacer } from "@geist-ui/react"
 import { sortingSpeedTable } from "../constants"
-import {
-  BarColorPalette,
-  SortingAlgorithms,
-  SortingSpeeds,
-  SortingState,
-} from "../types"
-import { default as Head } from "next/head"
-import { AppStateContext } from "../contexts/app-state"
+import { SortingAlgorithms, SortingSpeeds, SortingState } from "../types"
+import Head from "next/head"
+import { AppStateContext, BarPaletteCtx } from "../contexts/app-state"
 
-const getBarElementsFromBarHeights = (
-  barHeights: number[],
-  defaultBg: string
-) => {
-  return barHeights.map((heightValue, idx) => (
-    <Bar
-      defaultBg={defaultBg}
-      height={heightValue}
-      key={idx}
-      width={Math.floor(window.innerWidth / barHeights.length) / 2}
-    />
-  ))
+interface HomeState {
+  array: number[]
+  arrayLength: number
+  selectedAlgorithm: SortingAlgorithms
+  sortingSpeed: keyof SortingSpeeds
+  sortingState: SortingState
 }
 
-const Home: React.FC = () => {
-  const { palette: geistUIPalette } = useTheme()
-  const palette: BarColorPalette = {
-    compare: geistUIPalette.foreground,
-    idle: geistUIPalette.accents_4,
-    correctOrder: geistUIPalette.cyan,
-    swap: geistUIPalette.success,
-    wrongOrder: geistUIPalette.error,
+class Index extends React.Component<{ children: JSX.Element }, HomeState> {
+  static contextType = BarPaletteCtx
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      array: [],
+      arrayLength: 70,
+      selectedAlgorithm: "Selection",
+      sortingSpeed: "normal",
+      sortingState: "Sort",
+    }
   }
 
-  const [barHeights, setBarHeights] = useState<number[]>([])
-  const [sortingState, setSortingState] = useState<SortingState>("Sort")
-  const [arrayLength, setArrayLength] = useState(70)
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState<SortingAlgorithms>(
-    "Selection"
-  )
-  const [sortingSpeed, setSortingSpeed] = useState<keyof SortingSpeeds>(
-    "normal"
-  )
-  const barsRef = useRef<HTMLElement[]>(null)
+  componentDidMount() {
+    this.resetBars()
+  }
 
-  useEffect(resetBars, [arrayLength, selectedAlgorithm])
+  componentDidUpdate(prevProps, prevState: HomeState) {
+    const arrayLengthChanges = prevState.arrayLength !== this.state.arrayLength
+    const algorithmChanges =
+      prevState.selectedAlgorithm !== this.state.selectedAlgorithm
 
-  function resetBars() {
+    if (arrayLengthChanges || algorithmChanges) {
+      this.resetBars()
+    }
+  }
+
+  resetBars = () => {
+    const barPalette = this.context
+    const { arrayLength } = this.state
     const newBarHeights = generateBarHeights(arrayLength)
-    setBarHeights(newBarHeights)
-    setSortingState("Sort")
+    this.setState({ array: newBarHeights, sortingState: "Sort" })
     requestAnimationFrame(() => {
-      const barsDomEl = getAllBars()
-      barsRef.current = Array.from(barsDomEl)
-      const sampleBg = barsRef.current[5].style.backgroundColor
-      if (sampleBg === hexToRgb(palette.correctOrder)) {
-        changeBarsColor(barsRef.current, palette.idle)
+      const barsDomEl = Array.from(getAllBars())
+      const sampleBg = barsDomEl[5].style.backgroundColor
+      if (sampleBg === hexToRgb(barPalette.correctOrder)) {
+        changeBarsColor(barsDomEl, barPalette.idle)
       }
     })
   }
 
-  function triggerAnimation(bars: HTMLElement[]) {
-    setSortingState("Sorting")
+  startSorting = () => {
+    const barPalette = this.context
+    this.setState({ sortingState: "Sorting" })
     startAnimation({
-      barHeights,
-      bars,
-      palette,
-      sortingAlgorithm: selectedAlgorithm,
-      sortingSpeed: sortingSpeedTable[sortingSpeed],
-      callback: () => setSortingState("Sorted"),
+      barHeights: this.state.array,
+      bars: Array.from(getAllBars()),
+      palette: barPalette,
+      sortingAlgorithm: this.state.selectedAlgorithm,
+      sortingSpeed: sortingSpeedTable[this.state.sortingSpeed],
+      callback: () => this.setState({ sortingState: "Sorted" }),
     })
   }
 
-  return (
-    <>
-      <Head>
-        <title>Sorting Algorithms Visualizer</title>
-      </Head>
+  /**
+   * Map array to bar elements
+   * @param array Bar heights
+   * @param defaultBg Default background color for each bar
+   * @returns Bar JSX elements
+   */
+  arrayToBars = (array: number[], defaultBg: string) => {
+    return array.map((heightValue, idx) => (
+      <Bar
+        defaultBg={defaultBg}
+        height={heightValue}
+        key={idx}
+        width={Math.floor(window.innerWidth / array.length) / 2}
+      />
+    ))
+  }
 
-      <div className={styles.container}>
-        <AppStateContext.Provider value={{ sortingState }}>
-          <div className={styles.sidebarContainer}>
-            <Spacer y={1} />
-            <AppTitle />
-            <Spacer y={1} />
-            <AlgorithmSelector
-              onChange={setSelectedAlgorithm}
-              selected={selectedAlgorithm}
-            />
-            <ArrayLengthModifier
-              onChange={(value) => setArrayLength(value)}
-              value={arrayLength}
-            />
-            <Spacer y={0.5} />
-            <SpeedControl
-              onSortingSpeedChange={(speed: keyof SortingSpeeds) =>
-                setSortingSpeed(speed)
-              }
-              sortingSpeed={sortingSpeed}
-            />
-            <Spacer y={1.5} />
-            <SortButton onClick={() => triggerAnimation(barsRef.current)} />
-            <Spacer y={0.6} />
-            <ResetButton onClick={resetBars} />
-            <Spacer y={1.7} />
-            <LinkToRepo />
-            <Footer />
+  render() {
+    const barPalette = this.context
+    const {
+      array,
+      sortingState,
+      selectedAlgorithm,
+      arrayLength,
+      sortingSpeed,
+    } = this.state
+
+    return (
+      <>
+        <Head>
+          <title>Sorting Algorithms Visualizer</title>
+        </Head>
+
+        <div className={styles.container}>
+          <AppStateContext.Provider value={{ sortingState }}>
+            <div className={styles.sidebarContainer}>
+              <Spacer y={1} />
+              <AppTitle />
+              <Spacer y={1} />
+              <AlgorithmSelector
+                onChange={(newAlgorithm) =>
+                  this.setState({ selectedAlgorithm: newAlgorithm })
+                }
+                selected={selectedAlgorithm}
+              />
+              <ArrayLengthModifier
+                onChange={(value) => this.setState({ arrayLength: value })}
+                value={arrayLength}
+              />
+              <Spacer y={0.5} />
+              <SpeedControl
+                onSortingSpeedChange={(speed: keyof SortingSpeeds) =>
+                  this.setState({ sortingSpeed: speed })
+                }
+                sortingSpeed={sortingSpeed}
+              />
+              <Spacer y={1.5} />
+              <SortButton onClick={this.startSorting} />
+              <Spacer y={0.6} />
+              <ResetButton onClick={this.resetBars} />
+              <Spacer y={1.7} />
+              <LinkToRepo />
+              <Footer />
+            </div>
+          </AppStateContext.Provider>
+          <div className={styles.barsContainer}>
+            {this.arrayToBars(array, barPalette.idle)}
           </div>
-        </AppStateContext.Provider>
-        <div className={styles.barsContainer}>
-          {getBarElementsFromBarHeights(barHeights, palette.idle)}
         </div>
-      </div>
-    </>
-  )
+      </>
+    )
+  }
 }
 
-export default Home
+export default Index
