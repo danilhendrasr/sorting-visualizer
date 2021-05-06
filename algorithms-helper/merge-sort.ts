@@ -1,22 +1,15 @@
-import { AnimateFunctionParams } from "../types"
+import { AnimateFunctionParams, AnimationStep } from "../types"
 import {
   changeBarsColor,
   getNumberValueFromElementHeight,
   postSortAnimation,
 } from "../utils"
 
-interface animationHolder {
-  compare?: [number, number]
-  idxToInsertTo?: number
-  moveFromIdx?: number
-  shift?: number
-}
-
 interface mergeSortParams {
   array: number[]
   start: number
   end: number
-  animationHolder: animationHolder[]
+  animationStepsHolder: AnimationStep[]
 }
 
 interface mergeParams extends mergeSortParams {
@@ -24,19 +17,17 @@ interface mergeParams extends mergeSortParams {
 }
 
 const merge = (params: mergeParams) => {
-  let { array, start, mid, end, animationHolder: animations } = params
+  let { array, start, mid, end, animationStepsHolder } = params
   let start2 = mid + 1
 
   while (start <= mid && start2 <= end) {
-    animations.push({ compare: [start, start2] })
+    animationStepsHolder.push({ compare: [start, start2] })
     if (array[start] < array[start2]) {
+      animationStepsHolder.push({ correctOrder: [start, start2] })
       start++
     } else {
-      animations.push({
-        idxToInsertTo: start,
-        moveFromIdx: start2,
-        shift: start2 - start,
-      })
+      animationStepsHolder.push({ wrongOrder: [start, start2] })
+      animationStepsHolder.push({ swap: [start, start2] })
       const valueToMove = array[start2]
       let idxToShiftFrom = start2
 
@@ -54,50 +45,77 @@ const merge = (params: mergeParams) => {
 }
 
 const mergeSort = (params: mergeSortParams) => {
-  const { array, start, end, animationHolder } = params
+  const { array, start, end, animationStepsHolder } = params
   if (start >= end) return
 
   const mid = Math.floor(start + (end - start) / 2)
-  mergeSort({ array, start, end: mid, animationHolder })
-  mergeSort({ array, start: mid + 1, end, animationHolder })
-  merge({ array, start, mid, end, animationHolder })
+  mergeSort({
+    array,
+    start,
+    end: mid,
+    animationStepsHolder: animationStepsHolder,
+  })
+  mergeSort({
+    array,
+    start: mid + 1,
+    end,
+    animationStepsHolder: animationStepsHolder,
+  })
+  merge({ array, start, mid, end, animationStepsHolder: animationStepsHolder })
 }
 
 const animateMergeSort = (params: AnimateFunctionParams) => {
   const { bars, palette, sortingSpeed, callback } = params
-  const array = bars.map((bar) => getNumberValueFromElementHeight(bar.style.height))
-  // TODO: Add more key to the animation steps. E.g: correctOrder, wrongOrder, etc.
-  const animations = []
-  mergeSort({ array, start: 0, end: array.length - 1, animationHolder: animations })
+  const array = bars.map((bar) =>
+    getNumberValueFromElementHeight(bar.style.height)
+  )
+
+  const animationSteps: AnimationStep[] = []
+  mergeSort({
+    array,
+    start: 0,
+    end: array.length - 1,
+    animationStepsHolder: animationSteps,
+  })
 
   let previousOp: "compare" | "swap" = "compare"
-  let previousActiveBars: HTMLElement[] = []
-  animations.forEach((animation: animationHolder, idx) => {
+  let previousActiveBars: HTMLElement[]
+  animationSteps.forEach((animation, idx) => {
     setTimeout(() => {
-      if (idx > 0 && previousOp === "compare") {
-        setTimeout(() => {
-          const [idx1, idx2] = animations[idx - 1].compare
-          changeBarsColor([bars[idx1], bars[idx2]], palette.idle)
-        }, 5)
+      if (idx > 0) {
+        changeBarsColor(previousActiveBars, palette.idle)
       }
 
       if (animation.compare) {
         previousOp = "compare"
-        const [idx1, idx2] = animation.compare
-        const barsToOperate = [bars[idx1], bars[idx2]]
+        const barsToOperate = animation.compare.map((idx) => bars[idx])
         changeBarsColor(barsToOperate, palette.compare)
         previousActiveBars = barsToOperate
-      } else {
-        const { idxToInsertTo, moveFromIdx } = animation
-        previousOp = "swap"
-        const barToMoveHeight = bars[moveFromIdx].style.height
-        for (let x = moveFromIdx; x > idxToInsertTo; x--) {
-          bars[x].style.height = bars[x - 1].style.height
+      } else if (animation.wrongOrder) {
+        const barsToOperate = animation.wrongOrder.map((idx) => bars[idx])
+        changeBarsColor(barsToOperate, palette.wrongOrder)
+        previousActiveBars = barsToOperate
+      } else if (animation.correctOrder) {
+        const barsToOperate = animation.correctOrder.map((idx) => bars[idx])
+        changeBarsColor(barsToOperate, palette.correctOrder)
+        previousActiveBars = barsToOperate
+      } else if (animation.swap) {
+        const [idx1, idx2] = animation.swap
+        const movedBarHeight = bars[idx2].style.height
+        const barsToOperate = bars.slice(idx1, idx2 + 1)
+
+        for (let i = idx2; i > idx1; i--) {
+          bars[i].style.backgroundColor = palette.correctOrder
+          bars[i].style.height = bars[i - 1].style.height
         }
-        bars[idxToInsertTo].style.height = barToMoveHeight
+
+        bars[idx1].style.backgroundColor = palette.swap
+        bars[idx1].style.height = movedBarHeight
+
+        previousActiveBars = barsToOperate
       }
 
-      if (idx === animations.length - 1 && callback) {
+      if (idx === animationSteps.length - 1 && callback) {
         changeBarsColor(previousActiveBars, palette.idle)
         callback()
         postSortAnimation(bars, palette.correctOrder)
