@@ -1,4 +1,4 @@
-import { AnimateFunctionParams, SwapTypeAnimationStep } from "../types"
+import { AnimateFunctionParams, AnimationStep } from "../types"
 import {
   changeBarsColor,
   postSortAnimation,
@@ -6,13 +6,13 @@ import {
   getNumberValueFromElementHeight,
 } from "../utils"
 
-type SelectionSortAnimationStep = Pick<SwapTypeAnimationStep, "compare" | "swap"> & {
+type IAnimationStep = Pick<AnimationStep, "compare" | "swap"> & {
   mark?: [number, number]
 }
 
 export const selectionSort = (array: number[]) => {
   const arrayLength = array.length
-  const animations: SelectionSortAnimationStep[] = []
+  const animations: IAnimationStep[] = []
 
   for (let i = 0; i < arrayLength; i++) {
     let minIdx = i
@@ -31,7 +31,9 @@ export const selectionSort = (array: number[]) => {
 
 export const animateSelectionSort = (params: AnimateFunctionParams) => {
   const { bars, palette, sortingSpeed, callback } = params
-  const barHeights = bars.map((bar) => getNumberValueFromElementHeight(bar.style.height))
+  const barHeights = bars.map((bar) =>
+    getNumberValueFromElementHeight(bar.style.height)
+  )
   const animations = selectionSort(barHeights)
 
   let prevActiveBars = []

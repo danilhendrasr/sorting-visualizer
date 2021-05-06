@@ -1,19 +1,12 @@
-import { AnimateFunctionParams } from "../types"
+import { AnimateFunctionParams, AnimationStep } from "../types"
 import {
   changeBarsColor,
   getNumberValueFromElementHeight,
   postSortAnimation,
 } from "../utils"
 
-interface AnimationStep {
-  compare?: [number, number]
-  wrongOrder?: [number, number]
-  correctOrder?: [number, number]
-  swap?: [number, number]
-}
-
 const getBubbleSortAnimationSteps = (array: number[]) => {
-  const animationSteps = [] as AnimationStep[]
+  const animationSteps: AnimationStep[] = []
 
   const arLength = array.length
   for (let x = 0; x < arLength; x++) {
@@ -39,7 +32,9 @@ const getBubbleSortAnimationSteps = (array: number[]) => {
 
 const animateBubbleSort = (params: AnimateFunctionParams) => {
   const { bars, palette, sortingSpeed, callback } = params
-  const barsHeights = bars.map((bar) => getNumberValueFromElementHeight(bar.style.height))
+  const barsHeights = bars.map((bar) =>
+    getNumberValueFromElementHeight(bar.style.height)
+  )
   const animationSteps = getBubbleSortAnimationSteps(barsHeights)
 
   let prevActiveBars = [] as HTMLElement[]
@@ -60,7 +55,9 @@ const animateBubbleSort = (params: AnimateFunctionParams) => {
         changeBarsColor(prevActiveBars, palette.correctOrder)
       } else {
         prevActiveBars = step.swap.map((barIdx) => bars[barIdx])
-        prevActiveBars.forEach((bar) => (bar.style.backgroundColor = palette.swap))
+        prevActiveBars.forEach(
+          (bar) => (bar.style.backgroundColor = palette.swap)
+        )
         ;[prevActiveBars[0].style.height, prevActiveBars[1].style.height] = [
           prevActiveBars[1].style.height,
           prevActiveBars[0].style.height,

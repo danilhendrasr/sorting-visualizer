@@ -24,9 +24,11 @@ export interface AnimateFunctionParams {
   callback?: () => void
 }
 
-export interface SwapTypeAnimationStep {
-  compare?: [number, number]
-  correctOrder?: [number, number]
-  swap?: [number, number]
-  wrongOrder?: [number, number]
+type TwoNumberTuple = [number, number]
+
+export interface AnimationStep {
+  compare?: TwoNumberTuple
+  correctOrder?: TwoNumberTuple
+  swap?: TwoNumberTuple
+  wrongOrder?: TwoNumberTuple
 }

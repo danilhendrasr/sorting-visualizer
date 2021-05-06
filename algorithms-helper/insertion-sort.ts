@@ -1,19 +1,10 @@
-import { AnimateFunctionParams } from "../types"
+import { AnimateFunctionParams, AnimationStep } from "../types"
 import {
   getAllBars,
   changeBarsColor,
   postSortAnimation,
   getNumberValueFromElementHeight,
 } from "../utils"
-
-type TwoNumber = [number, number]
-
-interface AnimationStep {
-  compare?: TwoNumber
-  correctOrder?: TwoNumber
-  swap?: TwoNumber
-  wrongOrder?: TwoNumber
-}
 
 const getInsertionSortAnimationSteps = (inputArray: number[]) => {
   let animationSteps: AnimationStep[] = []
