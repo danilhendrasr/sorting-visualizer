@@ -27,9 +27,9 @@ const getInsertionSortAnimationSteps = (inputArray: number[]) => {
       animationSteps.push({ compare: [i, j] })
       const leftSide = array[j]
 
-      if (currentItem < leftSide) {
+      if (currentItem <= leftSide) {
         if (j === 0) {
-          animationSteps.push({ correctOrder: [i, j] })
+          animationSteps.push({ wrongOrder: [i, j] })
           animationSteps.push({ swap: [i, j] })
           const tempArray = array.slice(j, i)
           array[j] = currentItem
@@ -41,7 +41,7 @@ const getInsertionSortAnimationSteps = (inputArray: number[]) => {
         greaterLeftSideExists = true
       } else {
         if (greaterLeftSideExists) {
-          animationSteps.push({ correctOrder: [i, j + 1] })
+          animationSteps.push({ correctOrder: [i, j] })
           animationSteps.push({ swap: [i, j + 1] })
           const tempArray = array.slice(j + 1, i)
           array[j + 1] = currentItem
@@ -64,6 +64,7 @@ export const animateInsertionSort = (params: AnimateFunctionParams) => {
   const barHeights = bars.map((bar) =>
     getNumberValueFromElementHeight(bar.style.height)
   )
+  console.log(barHeights)
   const animationSteps = getInsertionSortAnimationSteps(barHeights)
 
   let prevActiveBars: HTMLElement[]
@@ -84,13 +85,15 @@ export const animateInsertionSort = (params: AnimateFunctionParams) => {
         const [idx1, idx2] = step.swap
         prevActiveBars = bars.slice(idx2, idx1 + 1)
 
-        bars[idx2].style.backgroundColor = palette.swap
-        bars[idx2].style.height = bars[idx1].style.height
+        const movedBarHeight = bars[idx1].style.height
 
         for (let i = idx1; i > idx2; i--) {
           bars[i].style.backgroundColor = palette.swap
           bars[i].style.height = bars[i - 1].style.height
         }
+
+        bars[idx2].style.backgroundColor = palette.swap
+        bars[idx2].style.height = movedBarHeight
       }
 
       if (idx === animationSteps.length - 1) {
